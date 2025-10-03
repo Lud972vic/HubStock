@@ -1,0 +1,125 @@
+{#
+  Template: Liste des affectations
+  Objectif: Filtrer par magasin et texte, et parcourir les affectations avec pagination.
+  Données attendues: assignments, stores, storeId, storeQ, equipmentQ, page, pages, limit.
+  Notes:
+    - La table affiche la quantité affectée et retournée, avec dates.
+    - Les actions “Voir”/“Modifier” mènent aux pages dédiées.
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}Affectations{% endblock %}
+
+{% block body %}
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h1 class="h3 m-0">Affectations</h1>
+        {% if is_granted('ROLE_USER') %}
+            <a href="{{ path('app_assignment_new') }}" class="btn btn-primary"><i class="fa-solid fa-plus me-1"></i>Nouvelle affectation</a>
+        {% endif %}
+    </div>
+
+    <form method="get" class="row g-3 mb-3">
+        <div class="col-sm-3">
+            <label class="form-label">Magasin</label>
+            <select name="store" class="form-select" onchange="this.form.submit()">
+                <option value="">Tous</option>
+                {% for s in stores %}
+                    <option value="{{ s.id }}" {% if storeId is defined and s.id == storeId %}selected{% endif %}>{{ s.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <label class="form-label">Recherche magasin</label>
+            <input type="text" name="store_q" value="{{ storeQ|default('') }}" class="form-control" placeholder="Nom du magasin">
+        </div>
+        <div class="col-sm-3">
+            <label class="form-label">Recherche matériel</label>
+            <input type="text" name="equipment_q" value="{{ equipmentQ|default('') }}" class="form-control" placeholder="Référence ou nom">
+        </div>
+        <div class="col-sm-2">
+            <label class="form-label">Archivés</label>
+            <div class="form-check form-switch">
+                <input class="form-check-input form-switch bg-primary" type="checkbox" id="toggleArchivedAssign" name="archived" value="1" {% if archived|default(false) %}checked{% endif %}>
+                <label class="form-check-label" for="toggleArchivedAssign">Inclure les archivés</label>
+            </div>
+        </div>
+        <div class="col-sm-2 align-self-end d-flex gap-2">
+            <input type="hidden" name="limit" value="{{ limit }}">
+            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-filter me-1"></i>Filtrer</button>
+            <a class="btn btn-primary" href="?"><i class="fa-solid fa-rotate-right me-1"></i>Réinitialiser</a>
+        </div>
+    </form>
+
+    <div class="card">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Affecté le</th>
+                <th>Magasin</th>
+                <th>Matériel</th>
+                <th>Quantité</th>
+                <th>Retournée</th>
+                <th>Retourné le</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for assignment in assignments %}
+            <tr>
+                <td>
+                    {{ assignment.id }}
+                    {% set remaining = assignment.quantity - (assignment.returnedQuantity ?: 0) %}
+                    {% if assignment.deletedAt %}
+                        <span class="badge bg-danger ms-2">Archivé</span>
+                    {% elseif remaining <= 0 %}
+                        <span class="badge bg-info text-dark ms-2">Retourné</span>
+                    {% elseif assignment.returnedQuantity > 0 %}
+                        <span class="badge bg-warning text-dark ms-2">Partiel</span>
+                    {% else %}
+                        <span class="badge bg-success ms-2">Affecté</span>
+                    {% endif %}
+                </td>
+                <td>{{ assignment.assignedAt ? assignment.assignedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ assignment.store.name }}</td>
+                <td>{{ assignment.equipment.reference }}{% if assignment.equipment.name %} — {{ assignment.equipment.name }}{% endif %}</td>
+                <td>{{ assignment.quantity }}</td>
+                <td>{{ assignment.returnedQuantity }}</td>
+                <td>{{ assignment.returnedAt ? assignment.returnedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td class="text-end">
+                    <div class="d-flex gap-2 justify-content-end">
+                        <a href="{{ path('app_assignment_show', {'id': assignment.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-eye me-1"></i>Voir</a>
+                        {% if not assignment.deletedAt %}
+                            <a href="{{ path('app_assignment_edit', {'id': assignment.id}) }}" class="btn btn-sm btn-warning"><i class="fa-solid fa-pen me-1"></i>Éditer</a>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            {% if not assignment.deletedAt %}
+                                {{ include('assignment/_delete_form.html.twig') }}
+                            {% else %}
+                                {{ include('assignment/_restore_form.html.twig') }}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6" class="text-center text-muted">Aucune affectation pour le moment</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+    <nav class="mt-3" aria-label="Pagination">
+        <ul class="pagination justify-content-end">
+            <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+                <a class="page-link" href="?page={{ page - 1 }}&limit={{ limit }}{% if storeId is defined and storeId %}&store={{ storeId }}{% endif %}{% if storeQ is defined and storeQ %}&store_q={{ storeQ }}{% endif %}{% if equipmentQ is defined and equipmentQ %}&equipment_q={{ equipmentQ }}{% endif %}{% if archived|default(false) %}&archived=1{% endif %}">Précédent</a>
+            </li>
+            <li class="page-item disabled"><span class="page-link">Page {{ page }} / {{ pages }}</span></li>
+            <li class="page-item {% if page >= pages %}disabled{% endif %}">
+                <a class="page-link" href="?page={{ page + 1 }}&limit={{ limit }}{% if storeId is defined and storeId %}&store={{ storeId }}{% endif %}{% if storeQ is defined and storeQ %}&store_q={{ storeQ }}{% endif %}{% if equipmentQ is defined and equipmentQ %}&equipment_q={{ equipmentQ }}{% endif %}{% if archived|default(false) %}&archived=1{% endif %}">Suivant</a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}

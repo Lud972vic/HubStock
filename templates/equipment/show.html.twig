@@ -1,0 +1,202 @@
+{#
+  Template: Détail d’un matériel
+  Objectif: Afficher les informations du matériel, son stock, les mouvements (ajout/retour/ajustement) et l’historique d’audit.
+  Données attendues:
+    - equipment: entité \App\Entity\Equipment
+    - movements: liste des \App\Entity\Movement liés au matériel
+    - audits: liste des \App\Entity\Audit pour le matériel (optionnel)
+  Notes:
+    - Les badges de type de mouvement rendent la lecture plus visuelle.
+    - Le formulaire “Ajuster le stock” crée un mouvement et peut tracer l’utilisateur connecté.
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail matériel{% endblock %}
+
+{% block body %}
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h1 class="h3 m-0">
+            Détail matériel
+            {% if equipment.deletedAt %}
+                <span class="badge bg-danger ms-2">Archivé</span>
+            {% endif %}
+        </h1>
+        <div class="d-flex gap-2">
+            <a href="{{ path('app_equipment_index') }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-arrow-left me-1"></i>Retour</a>
+            {% if not equipment.deletedAt %}
+                <a href="{{ path('app_equipment_edit', {'id': equipment.id}) }}" class="btn btn-danger"><i class="fa-solid fa-pen me-1"></i>Modifier</a>
+            {% endif %}
+            {% if is_granted('ROLE_ADMIN') and equipment.deletedAt %}
+                {{ include('equipment/_restore_form.html.twig') }}
+            {% endif %}
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ equipment.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ equipment.name }}</td>
+            </tr>
+            <tr>
+                <th>Référence</th>
+                <td>{{ equipment.reference }}</td>
+            </tr>
+            <tr>
+                <th>Catégorie</th>
+                <td>{{ equipment.category.name }}</td>
+            </tr>
+            <tr>
+                <th>État</th>
+                <td>
+                    {% set s = equipment.state %}
+                    {% set badge = s == 'neuf' ? 'success' : (s == 'utilisé' ? 'info' : 'danger') %}
+                    <span class="badge bg-{{ badge }} text-uppercase">{{ s }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>Stock</th>
+                <td>{{ equipment.stockQuantity }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-6">
+            <div class="border rounded p-3 h-100">
+                <h2 class="h6 mb-2">Métadonnées</h2>
+                <ul class="list-unstyled mb-0 small">
+                    <li>
+                        <strong>Créé par:</strong>
+                        {{ createdBy ? createdBy.fullName ~ ' (' ~ createdAt|date('Y-m-d H:i') ~ ')' : '—' }}
+                    </li>
+                    <li>
+                        <strong>Dernière modification:</strong>
+                        {{ updatedBy ? updatedBy.fullName ~ ' (' ~ updatedAt|date('Y-m-d H:i') ~ ')' : '—' }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="border rounded p-3 h-100">
+                <h2 class="h6 mb-2">Historique des actions</h2>
+                {% if audits is empty %}
+                    <p class="text-muted m-0">Aucun audit pour ce matériel.</p>
+                {% else %}
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                    <th>Utilisateur</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for a in audits %}
+                                    <tr>
+                                        <td>{{ a.occurredAt|date('Y-m-d H:i') }}</td>
+                                        <td>{{ a.action }}</td>
+                                        <td>{{ a.user ? a.user.fullName : '—' }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        {% if is_granted('ROLE_ADMIN') %}
+            {% if not equipment.deletedAt %}
+                {{ include('equipment/_delete_form.html.twig') }}
+            {% else %}
+                {{ include('equipment/_restore_form.html.twig') }}
+            {% endif %}
+        {% endif %}
+    </div>
+
+    {% if not equipment.deletedAt %}
+    <div class="card mt-4">
+        <div class="card-body">
+            <h2 class="h5 mb-3">Ajuster le stock</h2>
+            <form action="{{ path('app_equipment_adjust', { id: equipment.id }) }}" method="post" class="row gy-2 align-items-end">
+                <input type="hidden" name="_token" value="{{ csrf_token('adjust' ~ equipment.id) }}" />
+
+                <div class="col-12 col-md-4">
+                    <label class="form-label">Direction</label>
+                    <div class="d-flex gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="direction" id="dirInc" value="increase" checked>
+                            <label class="form-check-label" for="dirInc">Augmenter</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="direction" id="dirDec" value="decrease">
+                            <label class="form-check-label" for="dirDec">Diminuer</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <label for="adjQty" class="form-label">Quantité</label>
+                    <input type="number" class="form-control" id="adjQty" name="quantity" min="1" required>
+                </div>
+
+                <div class="col-6 col-md-2">
+                    <button type="submit" class="btn btn-danger w-100">Valider</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-danger mt-4">Ce matériel est archivé. Consultation seule.</div>
+    {% endif %}
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <h2 class="h5 mb-3">Historique des mouvements</h2>
+            {% if movements is empty %}
+                <p class="text-muted m-0">Aucun mouvement enregistré pour ce matériel.</p>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Quantité</th>
+                                <th>Utilisateur</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mov in movements %}
+                                <tr>
+                                    <td>{{ mov.occurredAt|date('Y-m-d H:i') }}</td>
+                                    <td>
+                                        {% if mov.type == 'ajout' %}
+                                            <span class="badge bg-primary">Ajout</span>
+                                        {% elseif mov.type == 'retour' %}
+                                            <span class="badge bg-warning text-dark">Retour</span>
+                                        {% elseif mov.type == 'ajustement' %}
+                                            <span class="badge bg-secondary">ajustement</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ mov.type }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ mov.quantity }}</td>
+                                    <td>{{ mov.performedBy ? mov.performedBy.fullName : '—' }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

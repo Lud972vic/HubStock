@@ -2,9 +2,16 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Gestion des affectations{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
+            <!-- Bootswatch Brite local (téléchargé dans public/css) -->
+            <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+            <!-- Font Awesome (CDN) -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+            <!-- Project CSS (kept minimal to avoid overriding theme) -->
+            <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
         {% endblock %}
 
         {% block javascripts %}
@@ -12,6 +19,109 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+            <div class="container">
+                <a class="navbar-brand text-dark" href="{{ path('app_dashboard') }}"><i class="fa-solid fa-cubes me-2"></i>Gestion Stocks</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_store_index') }}"><i class="fa-solid fa-store me-2"></i>Magasins</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_equipment_index') }}"><i class="fa-solid fa-boxes-stacked me-2"></i>Matériels</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_assignment_index') }}"><i class="fa-solid fa-people-carry-box me-2"></i>Affectations</a></li>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li class="nav-item"><a class="nav-link" href="{{ path('app_user_index') }}"><i class="fa-solid fa-users me-2"></i>Utilisateurs</a></li>
+                        {% endif %}
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_faq') }}"><i class="fa-solid fa-circle-question me-2"></i>FAQ</a></li>
+                    </ul>
+                    <div class="ms-auto d-flex align-items-center gap-2">
+                        {% if app.user %}
+                            <span class="text-dark small">Bienvenue, {{ app.user.fullName|lower }}</span>
+                            <a class="btn btn-sm btn-danger" href="{{ path('app_logout') }}"><i class="fa-solid fa-right-from-bracket me-1"></i>Se déconnecter</a>
+                        {% else %}
+                            <a class="btn btn-sm btn-light" href="{{ path('app_login') }}"><i class="fa-solid fa-right-to-bracket me-1"></i>Se connecter</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <main class="container py-4">
+            {% for type, messages in app.flashes %}
+                {% set alertType = type == 'error' ? 'danger' : type %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ alertType }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <script>
+                        // Afficher également en SweetAlert pour une meilleure visibilité
+                        (function(){
+                            var iconMap = {
+                                'success': 'success',
+                                'danger': 'error',
+                                'warning': 'warning',
+                                'info': 'info',
+                                'error': 'error'
+                            };
+                            var icon = iconMap['{{ alertType }}'] || 'info';
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({
+                                    icon: icon,
+                                    text: {{ message|json_encode|raw }},
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        })();
+                    </script>
+                {% endfor %}
+            {% endfor %}
+            {% block body %}{% endblock %}
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            (function(){
+                function handleSubmit(e){
+                    var form = e.target;
+                    if (!form || !form.matches || !form.matches('form[data-confirm]')) return;
+                    e.preventDefault();
+
+                    var message = form.getAttribute('data-confirm') || 'Confirmer cette action ?';
+                    var type = form.getAttribute('data-confirm-type') || 'delete';
+                    var footer = form.getAttribute('data-confirm-footer') || 'Cette action est définitive. Elle ne peut pas être annulée.';
+
+                    var configByType = {
+                        'store': { icon: 'warning', confirmButtonColor: '#ffc107' },
+                        'equipment': { icon: 'warning', confirmButtonColor: '#dc3545' },
+                        'assignment': { icon: 'warning', confirmButtonColor: '#0d6efd' },
+                        'delete': { icon: 'warning', confirmButtonColor: '#dc3545' }
+                    };
+                    var cfg = configByType[type] || configByType['delete'];
+
+                    if (typeof Swal === 'undefined') { form.submit(); return; }
+
+                    Swal.fire({
+                        title: message,
+                        icon: cfg.icon,
+                        footer: footer,
+                        showCancelButton: true,
+                        confirmButtonText: 'Supprimer',
+                        confirmButtonColor: cfg.confirmButtonColor,
+                        cancelButtonText: 'Annuler'
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                }
+
+                if (!window.__confirmListenerBound) {
+                    document.addEventListener('submit', handleSubmit, true);
+                    document.addEventListener('turbo:load', function(){ /* delegated listener works across Turbo */ });
+                    window.__confirmListenerBound = true;
+                }
+            })();
+        </script>
     </body>
 </html>

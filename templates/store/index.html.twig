@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Magasins{% endblock %}
+
+{% block body %}
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h1 class="h3 m-0">Magasins</h1>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_store_new') }}" class="btn btn-primary"><i class="fa-solid fa-plus me-1"></i>Nouveau magasin</a>
+        {% endif %}
+    </div>
+
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-sm-4">
+            <label class="form-label">Recherche magasin</label>
+            <input type="text" name="q" value="{{ q|default('') }}" class="form-control" placeholder="Nom du magasin">
+        </div>
+        <div class="col-sm-4">
+            <label class="form-label">Archivés</label>
+            <div class="form-check form-switch">
+                <input class="form-check-input form-switch bg-primary" type="checkbox" id="toggleArchivedStore" name="archived" value="1" {% if archived|default(false) %}checked{% endif %}>
+                <label class="form-check-label" for="toggleArchivedStore">Inclure les archivés</label>
+            </div>
+        </div>
+        <div class="col-sm-4 align-self-end d-flex gap-2">
+            <input type="hidden" name="limit" value="{{ limit }}">
+            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-filter me-1"></i>Filtrer</button>
+            <a class="btn btn-primary" href="?"><i class="fa-solid fa-rotate-right me-1"></i>Réinitialiser</a>
+        </div>
+    </form>
+
+    <div class="card">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Adresse</th>
+                <th>Responsable</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for store in stores %}
+            <tr>
+                <td>{{ store.id }}</td>
+                <td>
+                    {{ store.name }}
+                    {% if store.deletedAt %}
+                        <span class="badge bg-danger ms-2">Mag. archivé</span>
+                    {% else %}
+                        <span class="badge bg-info ms-2">Mag. actif</span>
+                    {% endif %}
+                    <span class="badge bg-primary ms-2">Affectations: {{ store.assignments|length }}</span>
+                </td>
+                <td>{{ store.address }}</td>
+                <td>{{ store.manager }}</td>
+                <td>
+                    <div class="d-flex gap-2 justify-content-end">
+                        <a href="{{ path('app_store_show', {'id': store.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-eye me-1"></i>Voir</a>
+                        {% if not store.deletedAt %}
+                            <a href="{{ path('app_store_edit', {'id': store.id}) }}" class="btn btn-sm btn-warning"><i class="fa-solid fa-pen me-1"></i>Éditer</a>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            {% if not store.deletedAt %}
+                                {{ include('store/_delete_form.html.twig') }}
+                            {% else %}
+                                {{ include('store/_restore_form.html.twig') }}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5" class="text-center text-muted">Aucun magasin pour le moment</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+    <nav class="mt-3" aria-label="Pagination">
+        <ul class="pagination justify-content-end">
+            <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+                <a class="page-link" href="?page={{ page - 1 }}&limit={{ limit }}{% if q is defined and q %}&q={{ q }}{% endif %}{% if archived|default(false) %}&archived=1{% endif %}">Précédent</a>
+            </li>
+            <li class="page-item disabled"><span class="page-link">Page {{ page }} / {{ pages }}</span></li>
+            <li class="page-item {% if page >= pages %}disabled{% endif %}">
+                <a class="page-link" href="?page={{ page + 1 }}&limit={{ limit }}{% if q is defined and q %}&q={{ q }}{% endif %}{% if archived|default(false) %}&archived=1{% endif %}">Suivant</a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}

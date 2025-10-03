@@ -1,3 +1,31 @@
+/* Intentionally left minimal to let Bootswatch Brite drive the design. */
+/* Background image related to stock management */
 body {
-    background-color: skyblue;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)),
+    url('/img/entrepot.jpg');
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+/* Optional subtle card shadow to lift content on patterned bg */
+.card { box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,0.06); }
+/* Smooth scrolling for anchor navigation */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Highlight section when reached via anchor */
+@keyframes anchorHighlight {
+  0% { background-color: rgba(255, 193, 7, 0.25); }
+  100% { background-color: transparent; }
+}
+
+#section-prise-en-main:target,
+#section-stock:target,
+#section-administration:target {
+  animation: anchorHighlight 900ms ease-in-out 1;
+  border-radius: 0.25rem;
 }

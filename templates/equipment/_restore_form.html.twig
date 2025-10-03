@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('app_equipment_restore', {'id': equipment.id}) }}" data-confirm="Confirmer la restauration de ce matériel ?" data-confirm-type="equipment" class="d-inline">
+    <input type="hidden" name="_token" value="{{ csrf_token('restore' ~ equipment.id) }}">
+    <button class="btn btn-sm btn-danger" type="submit" {% if not equipment.deletedAt %}disabled{% endif %}><i class="fa-solid fa-rotate-left me-1"></i>Restaurer</button>
+</form>

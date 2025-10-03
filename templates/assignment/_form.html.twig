@@ -1,0 +1,49 @@
+<div class="card">
+  <div class="card-body">
+    {{ form_start(form) }}
+      {{ form_widget(form) }}
+      <div class="form-text" id="qtyHelp" style="display:none;"></div>
+      <div class="mt-3 d-flex gap-2">
+        <button class="btn btn-primary"><i class="fa-solid fa-floppy-disk me-1"></i>{{ button_label|default('Enregistrer') }}</button>
+        <a href="{{ path('app_assignment_index') }}" class="btn btn-danger"><i class="fa-solid fa-xmark me-1"></i>Annuler</a>
+      </div>
+    {{ form_end(form) }}
+    <script>
+      (function(){
+        var formEl = document.currentScript && document.currentScript.closest('.card-body');
+        var qty = formEl ? formEl.querySelector('select[data-qty="quantity"]') : document.querySelector('select[data-qty="quantity"]');
+        var eq = formEl ? formEl.querySelector('select[name$="[equipment]"]') : document.querySelector('select[name$="[equipment]"]');
+        var help = document.getElementById('qtyHelp');
+        function fillQty(stock){
+          if (!qty) return;
+          qty.innerHTML = '';
+          if (stock > 0){
+            for (var i = 1; i <= stock; i++) {
+              var o = document.createElement('option');
+              o.value = String(i);
+              o.textContent = String(i);
+              qty.appendChild(o);
+            }
+            qty.disabled = false;
+            if (help){ help.style.display='block'; help.textContent = 'Stock disponible: ' + stock + ' (quantité max)'; }
+          } else {
+            var o = document.createElement('option');
+            o.value = '';
+            o.textContent = 'Sélectionnez un matériel';
+            qty.appendChild(o);
+            qty.disabled = true;
+            if (help){ help.style.display='block'; help.textContent = 'Aucun stock disponible pour ce matériel.'; }
+          }
+        }
+        function onEqChange(){
+          if (!eq) return;
+          var opt = eq.options[eq.selectedIndex];
+          var stock = opt ? parseInt(opt.getAttribute('data-stock') || '0', 10) : 0;
+          fillQty(stock);
+        }
+        if (eq){ eq.addEventListener('change', onEqChange); }
+        onEqChange();
+      })();
+    </script>
+  </div>
+</div>

@@ -1,0 +1,129 @@
+{#
+  PDF: Matériel affecté à un magasin
+  Objectif: Liste des affectations actives (quantité non retournée) avec zone de signature.
+  Données attendues:
+    - store: \App\Entity\Store
+    - rows: array de { a: \App\Entity\Assignment, remaining: int }
+    - generatedAt: \DateTimeInterface
+
+  Personnalisation du logo:
+    - Le logo est chargé depuis /public/img/aldi-logo.png (ressource locale, compatible Dompdf car isRemoteEnabled=false).
+    - Pour changer le logo, remplacez le fichier dans public/img/ ou ajustez la balise <img>.
+
+  Notes Dompdf:
+    - Privilégier les polices supportées (DejaVu Sans) et le CSS simple.
+    - Les URLs externes sont désactivées, les chemins relatifs à /public sont pris en charge.
+#}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Affectations - {{ store.name }}</title>
+    <style>
+        /* Styles simpifiés compatibles Dompdf */
+        body { font-family: DejaVu Sans, Arial, sans-serif; font-size: 12px; color: #222; }
+        h1 { font-size: 18px; margin: 0 0 4px 0; }
+        h2 { font-size: 14px; margin: 16px 0 8px; }
+        .muted { color: #666; }
+        .header { border-bottom: 1px solid #ccc; padding-bottom: 8px; margin-bottom: 10px; }
+        .meta { margin-top: 2px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #444; padding: 6px; }
+        th { background: #f0f0f0; font-weight: bold; }
+        .right { text-align: right; }
+        .signature-wrap { display: flex; gap: 12px; margin-top: 18px; }
+        .signature-box { flex: 1; border: 1px solid #444; padding: 10px; height: 120px; }
+        .small { font-size: 11px; }
+
+        /* Footer with pagination */
+        @page { margin: 20mm 15mm 20mm 15mm; }
+        .footer {
+            position: fixed;
+            left: 0; right: 0; bottom: 0;
+            border-top: 1px solid #ccc;
+            padding-top: 6px;
+            font-size: 10px;
+            color: #666;
+        }
+        .footer .page:after { content: counter(page) ' / ' counter(pages); }
+    </style>
+    </head>
+<body>
+    <div class="header">
+        <table style="width:100%; border:0; margin-bottom:6px;">
+            <tr>
+                <td style="border:0; width:60px;">
+                    {# Logo depuis un chemin absolu file:// fourni par le contrôleur (Dompdf) #}
+                    <img src="{{ logoSrc }}" alt="Logo ALDI" style="height:50px; width:auto;" />
+                </td>
+                <td style="border:0; text-align:right;">
+                    <span class="small muted">Généré le: {{ generatedAt|date('d/m/Y H:i') }}</span>
+                </td>
+            </tr>
+        </table>
+        <h1>Matériel affecté — {{ store.name }}</h1>
+        <div class="meta muted small">
+            Adresse: {{ store.address ?: '—' }}<br>
+            Responsable: {{ store.manager ?: '—' }}<br>
+            Magasin ID: {{ store.id }}
+        </div>
+    </div>
+
+    <h2>Liste des affectations actives</h2>
+    {% if rows is empty %}
+        <p class="muted">Aucune affectation active (tout a été retourné).</p>
+    {% else %}
+        {#
+          Table d’affectations actives:
+          - remaining: quantité encore présente au magasin (quantity - returnedQuantity)
+          - Les colonnes doivent rester alignées pour Dompdf.
+        #}
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 18%">Référence</th>
+                    <th style="width: 32%">Libellé</th>
+                    <th style="width: 10%" class="right">Qté affectée</th>
+                    <th style="width: 10%" class="right">Qté retournée</th>
+                    <th style="width: 10%" class="right">Restant</th>
+                    <th style="width: 20%">Date affectation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    {% set a = row.a %}
+                    <tr>
+                        <td>{{ a.equipment.reference }}</td>
+                        <td>{{ a.equipment.name }}</td>
+                        <td class="right">{{ a.quantity }}</td>
+                        <td class="right">{{ a.returnedQuantity ?: 0 }}</td>
+                        <td class="right">{{ row.remaining }}</td>
+                        <td>{{ a.assignedAt ? a.assignedAt|date('Y-m-d') : '—' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <h2>Réception</h2>
+    <div class="signature-wrap">
+        <div class="signature-box">
+            <strong>Réceptionnaire</strong><br>
+            <span class="small">Nom, date et signature</span>
+        </div>
+        <div class="signature-box">
+            <strong>Responsable magasin</strong><br>
+            <span class="small">Nom, date et signature</span>
+        </div>
+    </div>
+
+    <div class="footer">
+        <table style="width:100%; border:0;">
+            <tr>
+                <td style="border:0;">HubStock — Document généré automatiquement</td>
+                <td style="border:0; text-align:right;">Page <span class="page"></span></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

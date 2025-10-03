@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+{% block title %}Utilisateurs{% endblock %}
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h3">Utilisateurs</h1>
+  <a class="btn btn-primary" href="{{ path('app_user_new') }}"><i class="fa-solid fa-plus me-1"></i>Nouveau</a>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Email</th>
+        <th>Rôles</th>
+        <th>Actif</th>
+        <th class="text-end">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+        <tr>
+          <td>{{ user.fullName }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.roles|join(', ') }}</td>
+          <td>
+            {% if user.isActive %}
+              <span class="badge bg-primary">Actif</span>
+            {% else %}
+              <span class="badge bg-danger">Inactif</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            <a class="btn btn-sm btn-primary" href="{{ path('app_user_show', {id: user.id}) }}"><i class="fa-solid fa-eye me-1"></i>Voir</a>
+            <a class="btn btn-sm btn-warning" href="{{ path('app_user_edit', {id: user.id}) }}"><i class="fa-solid fa-pen me-1"></i>Modifier</a>
+            <a class="btn btn-sm btn-danger" href="{{ path('app_user_change_password', {id: user.id}) }}"><i class="fa-solid fa-key me-1"></i>Mot de passe</a>
+            {% if user.isActive %}
+              <form method="post" action="{{ path('app_user_deactivate', {id: user.id}) }}" class="d-inline" data-confirm="Désactiver cet utilisateur ?" data-confirm-type="delete">
+                <button class="btn btn-sm btn-danger"><i class="fa-solid fa-user-slash me-1"></i>Désactiver</button>
+              </form>
+            {% else %}
+              <form method="post" action="{{ path('app_user_activate', {id: user.id}) }}" class="d-inline" data-confirm="Activer cet utilisateur ?">
+                <button class="btn btn-sm btn-success"><i class="fa-solid fa-user-check me-1"></i>Activer</button>
+              </form>
+            {% endif %}
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5" class="text-center text-muted">Aucun utilisateur</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+{% endblock %}

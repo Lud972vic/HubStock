@@ -1,0 +1,267 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FAQ{% endblock %}
+
+{% block body %}
+<div class="container py-4" id="faq-top">
+    <div class="d-flex align-items-center mb-3">
+        <i class="fa-solid fa-circle-question fa-lg me-2"></i>
+        <h1 class="h3 m-0">FAQ</h1>
+    </div>
+
+    <p class="text-muted">Questions fréquentes sur l’utilisation de HubStock.</p>
+
+    <div class="card mb-3">
+        <div class="card-body py-2">
+            <div class="d-flex align-items-center mb-2">
+                <i class="fa-solid fa-list me-2"></i>
+                <strong>Sommaire</strong>
+            </div>
+            <ul class="list-inline mb-0 small">
+                <li class="list-inline-item me-3">
+                    <a href="#section-prise-en-main" class="link-secondary">
+                        <i class="fa-solid fa-book-open me-1"></i> Prise en main
+                    </a>
+                </li>
+                <li class="list-inline-item me-3">
+                    <a href="#section-stock" class="link-secondary">
+                        <i class="fa-solid fa-boxes-stacked me-1"></i> Stock
+                    </a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="#section-administration" class="link-secondary">
+                        <i class="fa-solid fa-user-gear me-1"></i> Administration
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="accordion" id="faqAccordion">
+        <div id="section-prise-en-main" class="mb-2 d-flex align-items-center text-uppercase text-muted small">
+            <i class="fa-solid fa-book-open me-2"></i><span>Prise en main</span>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <i class="fa-solid fa-store me-2"></i>Comment créer un magasin ?
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Rendez-vous dans <strong>Magasins</strong> puis cliquez sur <strong>Nouveau</strong>. Remplissez le formulaire et cliquez sur <i class="fa-solid fa-floppy-disk"></i> Enregistrer.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <i class="fa-solid fa-screwdriver-wrench me-2"></i>Comment ajouter un matériel ?
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Allez dans <strong>Matériels</strong>, cliquez sur <strong>Nouveau matériel</strong>, complétez les champs, puis <i class="fa-solid fa-floppy-disk"></i> Enregistrer.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    <i class="fa-solid fa-people-carry-box me-2"></i>Comment affecter un matériel à un magasin ?
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Ouvrez la page <strong>Affectations</strong> et utilisez <strong>Nouvelle affectation</strong> pour lier un matériel à un magasin, puis validez.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFive">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                    <i class="fa-solid fa-filter me-2"></i>Comment filtrer et réinitialiser les listes ?
+                </button>
+            </h2>
+            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Utilisez <i class="fa-solid fa-filter"></i> Filtrer pour affiner les résultats et <i class="fa-solid fa-rotate-right"></i> Réinitialiser pour revenir à la liste complète.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingSix">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                    <i class="fa-solid fa-key me-2"></i>Comment changer mon mot de passe ?
+                </button>
+            </h2>
+            <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Ouvrez votre profil utilisateur, cliquez sur <strong>Mot de passe</strong>, saisissez le nouveau mot de passe, puis <i class="fa-solid fa-floppy-disk"></i> Mettre à jour.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingSeven">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                    <i class="fa-solid fa-file-pdf me-2"></i>Comment exporter en PDF ?
+                </button>
+            </h2>
+            <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Certaines pages offrent une exportation PDF (ex. récapitulatif des matériels affectés à un magasin). Recherchez un bouton avec l’icône <i class="fa-solid fa-file-pdf"></i> ou une action « Exporter » pour générer le document.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwelve">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwelve" aria-expanded="false" aria-controls="collapseTwelve">
+                    <i class="fa-solid fa-list-ol me-2"></i>Comment utiliser la pagination et la limite d’éléments ?
+                </button>
+            </h2>
+            <div id="collapseTwelve" class="accordion-collapse collapse" aria-labelledby="headingTwelve" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Les pages de liste utilisent des liens <strong>Précédent</strong>/<strong>Suivant</strong> et conservent vos filtres.
+                    Le paramètre <code>limit</code> contrôle le nombre d’éléments par page (ex. <code>&limit=50</code> pour 50 éléments).
+                    Les filtres saisies (catégorie, recherche, archivés) sont persistés automatiquement dans la pagination.
+                </div>
+            </div>
+        </div>
+        <div class="text-end mt-2">
+            <a href="#faq-top" class="small link-secondary"><i class="fa-solid fa-arrow-up me-1"></i> Haut de page</a>
+        </div>
+
+        <div id="section-stock" class="mt-3 mb-2 d-flex align-items-center text-uppercase text-muted small">
+            <i class="fa-solid fa-boxes-stacked me-2"></i><span>Stock</span>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingEight">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                    <i class="fa-solid fa-tags me-2"></i>Comment gérer les catégories de matériel ?
+                </button>
+            </h2>
+            <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Les matériels sont associés à une <strong>catégorie</strong> lors de leur création ou édition. Vous pouvez <i class="fa-solid fa-filter"></i> filtrer les listes par catégorie dans la page <strong>Matériels</strong>.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingEleven">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven">
+                    <i class="fa-solid fa-arrows-rotate me-2"></i>Comment fonctionnent les mouvements de stock ?
+                </button>
+            </h2>
+            <div id="collapseEleven" class="accordion-collapse collapse" aria-labelledby="headingEleven" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Un <strong>mouvement</strong> est enregistré lors d’une affectation ou d’un retour de matériel.
+                    Ces mouvements alimentent les indicateurs du tableau de bord et permettent de suivre l’évolution du stock.
+                    Pour une analyse détaillée, référez-vous à l’historique et aux rapports disponibles dans l’application.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThirteen">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThirteen" aria-expanded="false" aria-controls="collapseThirteen">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i>Que signifient « ruptures » et « faible stock » ?
+                </button>
+            </h2>
+            <div id="collapseThirteen" class="accordion-collapse collapse" aria-labelledby="headingThirteen" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Le tableau de bord met en avant les <strong>ruptures</strong> (stock à 0) et le <strong>faible stock</strong> (proche de la rupture).
+                    Pour corriger, mettez à jour la quantité dans <strong>Matériels</strong> via la page <em>Modifier</em> du matériel concerné.
+                    Les filtres et la recherche aident à identifier rapidement les références impactées.
+                </div>
+            </div>
+        </div>
+        <div class="text-end mt-2">
+            <a href="#faq-top" class="small link-secondary"><i class="fa-solid fa-arrow-up me-1"></i> Haut de page</a>
+        </div>
+
+        <div id="section-administration" class="mt-3 mb-2 d-flex align-items-center text-uppercase text-muted small">
+            <i class="fa-solid fa-user-gear me-2"></i><span>Administration</span>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFour">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    <i class="fa-solid fa-box-archive me-2"></i>Que signifie archiver/restaurer ?
+                </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    <strong>Archiver</strong> désactive un élément sans le supprimer. <strong>Restaurer</strong> le réactive. Les actions sont visibles via les boutons dédiés.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingNine">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+                    <i class="fa-solid fa-clock-rotate-left me-2"></i>Où voir l’historique des actions (audit) ?
+                </button>
+            </h2>
+            <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Consultez la section <strong>Historique des actions</strong> sur la page de détail d’un magasin pour voir les événements récents (création, modifications, archivage, etc.).
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTen">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
+                    <i class="fa-solid fa-user-shield me-2"></i>Quels sont les rôles et permissions ?
+                </button>
+            </h2>
+            <div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    HubStock utilise principalement deux rôles : <strong>ROLE_USER</strong> et <strong>ROLE_ADMIN</strong>.
+                    Les administrateurs accèdent à la gestion des utilisateurs et aux opérations sensibles (ex. <em>archiver/restaurer</em>),
+                    tandis que les utilisateurs peuvent consulter et créer des affectations selon leur périmètre. Les boutons et liens s’affichent
+                    ou se masquent en fonction des permissions (ex. via <code>is_granted('ROLE_ADMIN')</code>).
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFourteen">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFourteen" aria-expanded="false" aria-controls="collapseFourteen">
+                    <i class="fa-solid fa-user-check me-2"></i>Comment activer ou désactiver un utilisateur ?
+                </button>
+            </h2>
+            <div id="collapseFourteen" class="accordion-collapse collapse" aria-labelledby="headingFourteen" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Depuis la page <strong>Utilisateurs</strong> (réservée aux administrateurs), utilisez les boutons <i class="fa-solid fa-user-check"></i> <em>Activer</em> et <i class="fa-solid fa-user-slash"></i> <em>Désactiver</em>.
+                    Un utilisateur désactivé ne peut plus se connecter. Les actions sont visibles uniquement si vous avez les permissions adaptées.
+                </div>
+            </div>
+        </div>
+        <div class="text-end mt-2">
+            <a href="#faq-top" class="small link-secondary"><i class="fa-solid fa-arrow-up me-1"></i> Haut de page</a>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ path('app_dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left me-1"></i> Retour au tableau de bord
+        </a>
+    </div>
+
+    <div class="mt-3 text-muted small">
+        <i class="fa-solid fa-life-ring me-1"></i>
+        Besoin d’aide ? Contactez le support :
+        <a href="mailto:support@hubstock.local" class="link-secondary">support@hubstock.local</a>
+    </div>
+</div>
+{% endblock %}

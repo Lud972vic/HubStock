@@ -1,0 +1,45 @@
+{#
+  Template: Formulaire de connexion
+  Objectif: Permettre à un utilisateur de se connecter avec email/mot de passe.
+  Données attendues:
+    - last_username: dernier email utilisé (fourni par le contrôleur Security)
+    - error: éventuelle erreur d’authentification
+  Notes:
+    - Le token CSRF protège contre les soumissions malveillantes.
+    - L’action du formulaire cible la route app_login.
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h4 mb-3 text-center">Connexion</h1>
+        {% if error %}
+          <div class="alert alert-danger">Identifiants invalides.</div>
+        {% endif %}
+        <form action="{{ path('app_login') }}" method="post" class="vstack gap-3">
+          <div>
+            <label for="inputEmail" class="form-label">Email</label>
+            <input type="text" id="inputEmail" name="_username" value="{{ last_username }}" class="form-control" required autofocus>
+          </div>
+          <div>
+            <label for="inputPassword" class="form-label">Mot de passe</label>
+            <input type="password" id="inputPassword" name="_password" class="form-control" required>
+          </div>
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+          <button class="btn btn-primary w-100" type="submit"><i class="fa-solid fa-right-to-bracket me-1"></i>Se connecter</button>
+        </form>
+        <p class="text-muted small mt-3 text-center">
+          HubStock est un outil de gestion des matériels et des affectations entre magasins.
+          Son objectif est de simplifier le suivi des stocks, éviter les erreurs et gagner du temps
+          dans la distribution et la restitution des équipements.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

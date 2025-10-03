@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('app_assignment_restore', {'id': assignment.id}) }}" data-confirm="Confirmer la restauration de cette affectation ?" data-confirm-type="assignment" class="d-inline">
+    <input type="hidden" name="_token" value="{{ csrf_token('restore' ~ assignment.id) }}">
+    <button class="btn btn-sm btn-danger" type="submit" {% if not assignment.deletedAt %}disabled{% endif %}><i class="fa-solid fa-rotate-left me-1"></i>Restaurer</button>
+</form>
