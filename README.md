@@ -4,8 +4,8 @@ Une application web simple pour gérer des magasins, des matériels, et leurs af
 
 <table>
   <tr>
-    <td><img src="Capture d’écran 2025-10-03 à 15.37.06.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.06.png"></td>
-    <td><img src="Capture d’écran 2025-10-03 à 15.37.15.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.15.png"></td>
+    <td><img src="Capture d’écran 2025-10-03 à 15.37.06.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.06.png"></td>
+    <td><img src="Capture d’écran 2025-10-03 à 15.37.15.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.15.png"></td>
   </tr>
   <tr>
     <td><img src="Capture d’écran 2025-10-03 à 15.37.24.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.24.png"></td>
@@ -182,3 +182,4 @@ Une application web simple pour gérer des magasins, des matériels, et leurs af
 
 
 Ce projet est sous licence MIT.
+
