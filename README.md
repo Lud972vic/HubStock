@@ -180,4 +180,5 @@ Une application web simple pour gérer des magasins, des matériels, et leurs af
 
 ## Licence
 
+
 Ce projet est sous licence MIT.
