@@ -18,10 +18,13 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
-        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+    <body class="{% block body_class %}{% endblock %}">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
-                <a class="navbar-brand text-dark" href="{{ path('app_dashboard') }}"><i class="fa-solid fa-cubes me-2"></i>Gestion Stocks</a>
+                <a class="navbar-brand d-flex align-items-center" href="{{ path('app_dashboard') }}">
+                    <img src="{{ asset('img/aldi-logo.png') }}" alt="ALDI" width="36" height="36" class="me-2">
+                    <span class="text-white">HubStock</span>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -37,10 +40,10 @@
                     </ul>
                     <div class="ms-auto d-flex align-items-center gap-2">
                         {% if app.user %}
-                            <span class="text-dark small">Bienvenue, {{ app.user.fullName|lower }}</span>
-                            <a class="btn btn-sm btn-danger" href="{{ path('app_logout') }}"><i class="fa-solid fa-right-from-bracket me-1"></i>Se déconnecter</a>
+                            <span class="text-white-50 small">Bienvenue, {{ app.user.fullName|lower }}</span>
+                            <a class="btn btn-sm btn-outilne-danger" href="{{ path('app_logout') }}"><i class="fa-solid fa-right-from-bracket me-1"></i>Se déconnecter</a>
                         {% else %}
-                            <a class="btn btn-sm btn-light" href="{{ path('app_login') }}"><i class="fa-solid fa-right-to-bracket me-1"></i>Se connecter</a>
+                            <a class="btn btn-sm btn-secondary" href="{{ path('app_login') }}"><i class="fa-solid fa-right-to-bracket me-1"></i>Se connecter</a>
                         {% endif %}
                     </div>
                 </div>
@@ -123,5 +126,19 @@
                 }
             })();
         </script>
+        <footer class="footer bg-primary text-white mt-5">
+            <div class="container py-4">
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-6">
+                        <span class="fw-semibold">HubStock</span> — Gérez vos stocks
+                    </div>
+                    <div class="col-12 col-md-6 text-md-end mt-3 mt-md-0">
+                        <a href="{{ path('app_faq') }}" class="footer-link">FAQ</a>
+                        <span class="mx-2 text-white-50">•</span>
+                        <a href="https://github.com/Lud972vic" class="footer-link" target="_blank">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </body>
 </html>

@@ -11,60 +11,76 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
+<section class="hero py-5 mb-4">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-12 col-lg-6">
+        <h1 class="display-5 fw-bold text-white mb-3">Gérez vos stocks</h1>
+        <p class="lead text-white-50 mb-4">Un outil simple, rapide et fiable pour suivre vos équipements et mouvements en temps réel.</p>
+        <div class="d-flex gap-2">
+          <a href="{{ path('app_assignment_index') }}" class="btn btn-secondary btn-lg">Voir les affectations</a>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6 text-center text-lg-end">
+        <img src="{{ asset('img/entrepot.jpg') }}" alt="Entrepôt" class="img-fluid rounded shadow-sm">
+      </div>
+    </div>
+  </div>
+ </section>
 <div class="row g-4">
   <div class="col-md-4">
-    <div class="card border-primary">
+    <div class="card border-0 shadow-sm hover-raise h-100">
       <div class="card-body">
-        <h5 class="card-title">Magasins</h5>
+        <h5 class="card-title text-primary">Magasins</h5>
         <p class="card-text display-6">{{ stores }}</p>
-        <a href="{{ path('app_store_index') }}" class="btn btn-primary"><i class="fa-solid fa-store me-1"></i>Voir la liste</a>
+        <a href="{{ path('app_store_index') }}" class="btn btn-secondary"><i class="fa-solid fa-store me-1"></i>Voir la liste</a>
       </div>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="card border-success">
+    <div class="card border-0 shadow-sm hover-raise h-100">
       <div class="card-body">
-        <h5 class="card-title">Matériels</h5>
+        <h5 class="card-title text-primary">Matériels</h5>
         <p class="card-text display-6">{{ equipment }}</p>
-        <a href="{{ path('app_equipment_index') }}" class="btn btn-success"><i class="fa-solid fa-boxes-stacked me-1"></i>Gérer le stock</a>
+        <a href="{{ path('app_equipment_index') }}" class="btn btn-secondary"><i class="fa-solid fa-boxes-stacked me-1"></i>Gérer le stock</a>
       </div>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="card border-warning">
+    <div class="card border-0 shadow-sm hover-raise h-100">
       <div class="card-body">
-        <h5 class="card-title">Affectations</h5>
+        <h5 class="card-title text-primary">Affectations</h5>
         <p class="card-text display-6">{{ assignments }}</p>
-        <a href="{{ path('app_assignment_index') }}" class="btn btn-warning"><i class="fa-solid fa-clock-rotate-left me-1"></i>Historique</a>
+        <a href="{{ path('app_assignment_index') }}" class="btn btn-secondary"><i class="fa-solid fa-clock-rotate-left me-1"></i>Historique</a>
       </div>
     </div>
   </div>
 </div>
 <div class="row g-4 mt-4">
   <div class="col-md-4">
-    <div class="card border-info">
+    <div class="card border-0 shadow-sm hover-raise h-100">
       <div class="card-body">
-        <h5 class="card-title">Stock total disponible</h5>
+        <h5 class="card-title text-primary">Stock total disponible</h5>
         <p class="card-text display-6">{{ stockTotal }}</p>
-        <a href="{{ path('app_equipment_index') }}" class="btn btn-info"><i class="fa-solid fa-screwdriver-wrench me-1"></i>Voir les matériels</a>
+        <a href="{{ path('app_equipment_index') }}" class="btn btn-secondary"><i class="fa-solid fa-screwdriver-wrench me-1"></i>Voir les matériels</a>
       </div>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="card border-danger">
+    <div class="card border-0 shadow-sm hover-raise h-100">
       <div class="card-body">
-        <h5 class="card-title">Ruptures de stock</h5>
+        <h5 class="card-title text-primary">Ruptures de stock (=0)</h5>
         <p class="card-text display-6">{{ outOfStock }}</p>
-        <a href="{{ path('app_equipment_index', { q: '' }) }}" class="btn btn-danger"><i class="fa-solid fa-triangle-exclamation me-1"></i>Analyser les ruptures</a>
+        <a href="{{ path('app_equipment_index', { q: '' }) }}" class="btn btn-secondary"><i class="fa-solid fa-triangle-exclamation me-1"></i>Analyser les ruptures</a>
       </div>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="card border-warning">
+    <div class="card border-0 shadow-sm hover-raise h-100">
       <div class="card-body">
-        <h5 class="card-title">Stock faible (≤ 5)</h5>
+        <h5 class="card-title text-primary">Stock faible (≤ 5)</h5>
         <p class="card-text display-6">{{ lowStock }}</p>
-        <a href="{{ path('app_equipment_index') }}" class="btn btn-warning"><i class="fa-solid fa-arrow-trend-up me-1"></i>Prioriser les réappros</a>
+        <a href="{{ path('app_equipment_index') }}" class="btn btn-secondary"><i class="fa-solid fa-arrow-trend-up me-1"></i>Prioriser les réappros</a>
       </div>
     </div>
   </div>
@@ -72,29 +88,29 @@
 
 <div class="row g-4 mt-4">
   <div class="col-md-4">
-    <div class="card border-primary">
+    <div class="card border-0 shadow-sm hover-raise h-100">
       <div class="card-body">
-        <h5 class="card-title">Affectations actives</h5>
+        <h5 class="card-title text-primary">Affectations actives</h5>
         <p class="card-text display-6">{{ activeAssigned }}</p>
-        <a href="{{ path('app_assignment_index') }}" class="btn btn-primary"><i class="fa-solid fa-people-carry-box me-1"></i>Voir les affectations</a>
+        <a href="{{ path('app_assignment_index') }}" class="btn btn-secondary"><i class="fa-solid fa-people-carry-box me-1"></i>Voir les affectations</a>
       </div>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="card border-secondary">
+    <div class="card border-0 shadow-sm hover-raise h-100">
       <div class="card-body">
-        <h5 class="card-title">Catégories</h5>
+        <h5 class="card-title text-primary">Catégories</h5>
         <p class="card-text display-6">{{ categories }}</p>
         <a href="{{ path('app_equipment_index') }}" class="btn btn-secondary"><i class="fa-solid fa-tags me-1"></i>Parcourir par catégorie</a>
       </div>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="card border-success">
+    <div class="card border-0 shadow-sm hover-raise h-100">
       <div class="card-body">
-        <h5 class="card-title">Mouvements (7 derniers jours)</h5>
+        <h5 class="card-title text-primary">Mouvements</h5>
         <p class="card-text display-6">{{ recentMovements }}</p>
-        <a href="{{ path('app_equipment_index') }}" class="btn btn-success"><i class="fa-solid fa-arrows-rotate me-1"></i>Consulter les mouvements</a>
+        <a href="{{ path('app_equipment_index') }}" class="btn btn-secondary"><i class="fa-solid fa-arrows-rotate me-1"></i>Consulter les mouvements</a>
       </div>
     </div>
   </div>

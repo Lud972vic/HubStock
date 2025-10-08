@@ -35,7 +35,23 @@ class Store
 
     #[ORM\Column(length: 255, nullable: true)]
     /** Nom du responsable (optionnel) */
-    private ?string $manager = null;
+    private ?string $sr = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    /** Code FR du magasin */
+    private ?string $codeFR = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    /** Statut du magasin */
+    private ?string $statut = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    /** Type de projet pour le magasin */
+    private ?string $typeDeProjet = null;
+
+    #[ORM\Column(type: 'date', nullable: true)]
+    /** Date d'ouverture du magasin */
+    private ?\DateTimeInterface $dateOuverture = null;
 
     #[ORM\OneToMany(mappedBy: 'store', targetEntity: Assignment::class, orphanRemoval: false)]
     /** Affectations liées à ce magasin */
@@ -77,14 +93,58 @@ class Store
         return $this;
     }
 
-    public function getManager(): ?string
+    public function getSr(): ?string
     {
-        return $this->manager;
+        return $this->sr;
     }
 
-    public function setManager(?string $manager): self
+    public function setSr(?string $sr): self
     {
-        $this->manager = $manager;
+        $this->sr = $sr;
+        return $this;
+    }
+
+    public function getCodeFR(): ?string
+    {
+        return $this->codeFR;
+    }
+
+    public function setCodeFR(?string $codeFR): self
+    {
+        $this->codeFR = $codeFR;
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?string $statut): self
+    {
+        $this->statut = $statut;
+        return $this;
+    }
+
+    public function getTypeDeProjet(): ?string
+    {
+        return $this->typeDeProjet;
+    }
+
+    public function setTypeDeProjet(?string $typeDeProjet): self
+    {
+        $this->typeDeProjet = $typeDeProjet;
+        return $this;
+    }
+
+    public function getDateOuverture(): ?\DateTimeInterface
+    {
+        return $this->dateOuverture;
+    }
+
+    public function setDateOuverture(?\DateTimeInterface $dateOuverture): self
+    {
+        $this->dateOuverture = $dateOuverture;
         return $this;
     }
 

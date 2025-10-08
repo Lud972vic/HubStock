@@ -137,6 +137,7 @@ class ComposerStaticInitaf3a971b86a4585c7c3bf9fe517e48ae
         'F' => 
         array (
             'FontLib\\' => 8,
+            'Faker\\' => 6,
         ),
         'E' => 
         array (
@@ -531,6 +532,10 @@ class ComposerStaticInitaf3a971b86a4585c7c3bf9fe517e48ae
         'FontLib\\' => 
         array (
             0 => __DIR__ . '/..' . '/dompdf/php-font-lib/src/FontLib',
+        ),
+        'Faker\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fakerphp/faker/src/Faker',
         ),
         'Egulias\\EmailValidator\\' => 
         array (

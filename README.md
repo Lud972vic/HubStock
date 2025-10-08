@@ -4,27 +4,27 @@ Une application web simple pour gérer des magasins, des matériels, et leurs af
 
 <table>
   <tr>
-    <td><img src="Capture d’écran 2025-10-03 à 15.37.06.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.06.png"></td>
-    <td><img src="Capture d’écran 2025-10-03 à 15.37.15.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.15.png"></td>
+    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.37.06.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.06.png"></td>
+    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.37.15.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.15.png"></td>
   </tr>
   <tr>
-    <td><img src="Capture d’écran 2025-10-03 à 15.37.24.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.24.png"></td>
-    <td><img src="Capture d’écran 2025-10-03 à 15.37.49.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.49.png"></td>
+    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.37.24.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.24.png"></td>
+    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.37.49.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.49.png"></td>
   </tr>
   <tr>
-    <td><img src="Capture d’écran 2025-10-03 à 15.38.08.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.08.png"></td>
-    <td><img src="Capture d’écran 2025-10-03 à 15.38.18.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.18.png"></td>
+    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.38.08.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.08.png"></td>
+    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.38.18.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.18.png"></td>
   </tr>
   <tr>
-    <td><img src="Capture d’écran 2025-10-03 à 15.38.26.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.26.png"></td>
-    <td><img src="Capture d’écran 2025-10-03 à 15.38.41.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.41.png"></td>
+    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.38.26.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.26.png"></td>
+    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.38.41.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.41.png"></td>
   </tr>
   <tr>
-    <td><img src="Capture d’écran 2025-10-03 à 15.38.54.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.54.png"></td>
-    <td><img src="Capture d’écran 2025-10-03 à 15.38.59.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.59.png"></td>
+    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.38.54.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.54.png"></td>
+    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.38.59.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.59.png"></td>
   </tr>
   <tr>
-    <td colspan="2"><img src="Capture d’écran 2025-10-03 à 15.39.09.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.39.09.png"></td>
+    <td colspan="2"><img src="public/readme/Capture d’écran 2025-10-03 à 15.39.09.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.39.09.png"></td>
   </tr>
 </table>
 
@@ -168,6 +168,13 @@ Une application web simple pour gérer des magasins, des matériels, et leurs af
 - Générer du code (ex: entités): `php bin/console make:entity` (via Maker Bundle).
 - Voir la configuration Doctrine: `config/packages/doctrine.yaml` et `config/packages/doctrine_migrations.yaml`.
 - Logs/erreurs: surveiller le terminal et/ou le Profiler Symfony si activé (`symfony/web-profiler-bundle`).
+
+### Assets (production)
+
+- Compiler les assets pour l’environnement de production afin que le thème et les couleurs soient correctement chargés:
+  - `php bin/console asset-map:compile --env=prod`
+  - (optionnel) réchauffer le cache: `php bin/console cache:clear --env=prod && php bin/console cache:warmup --env=prod`
+  - Vérifier que les fichiers sont présents dans `public/assets/` (notamment `styles/app.*.css` et `styles/custom.*.css`).
 
 ## Tests (optionnel)
 

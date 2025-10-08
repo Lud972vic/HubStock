@@ -164,7 +164,7 @@
 {%- endblock button_widget %}
 
 {% block submit_widget -%}
-    {%- set attr = attr|merge({class: (attr.class|default('btn-primary'))|trim}) -%}
+    {%- set attr = attr|merge({class: (attr.class|default('btn-outilne-primary'))|trim}) -%}
     {{- parent() -}}
 {%- endblock submit_widget %}
 

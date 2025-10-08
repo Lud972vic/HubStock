@@ -18,11 +18,30 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class UserController extends AbstractController
 {
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $em): Response
+    public function index(Request $request, EntityManagerInterface $em): Response
     {
-        $users = $em->getRepository(User::class)->findBy([], ['fullName' => 'ASC']);
+        $page = max(1, (int) $request->query->get('page', 1));
+        $limit = max(1, (int) $request->query->get('limit', 10));
+
+        $qb = $em->getRepository(User::class)->createQueryBuilder('u');
+
+        $countQb = clone $qb;
+        $total = (int) $countQb->select('COUNT(u.id)')->getQuery()->getSingleScalarResult();
+        $pages = max(1, (int) ceil($total / $limit));
+        $page = min($page, $pages);
+        $offset = ($page - 1) * $limit;
+
+        $users = $qb->orderBy('u.fullName', 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+
         return $this->render('user/index.html.twig', [
             'users' => $users,
+            'page' => $page,
+            'pages' => $pages,
+            'limit' => $limit,
         ]);
     }
 
@@ -44,7 +63,7 @@ final class UserController extends AbstractController
 
             $audit = (new \App\Entity\Audit())
                 ->setUser($this->getUser())
-                ->setAction('create')
+                ->setAction('Création')
                 ->setEntityClass(User::class)
                 ->setEntityId((int) $user->getId());
             $em->persist($audit);
@@ -86,7 +105,7 @@ final class UserController extends AbstractController
 
             $audit = (new \App\Entity\Audit())
                 ->setUser($this->getUser())
-                ->setAction('update')
+                ->setAction('Actualisaation')
                 ->setEntityClass(User::class)
                 ->setEntityId((int) $user->getId());
             $em->persist($audit);
@@ -110,7 +129,7 @@ final class UserController extends AbstractController
 
         $audit = (new \App\Entity\Audit())
             ->setUser($this->getUser())
-            ->setAction('activate')
+            ->setAction('Activation')
             ->setEntityClass(User::class)
             ->setEntityId((int) $user->getId());
         $em->persist($audit);
@@ -128,7 +147,7 @@ final class UserController extends AbstractController
 
         $audit = (new \App\Entity\Audit())
             ->setUser($this->getUser())
-            ->setAction('deactivate')
+            ->setAction('Désactivation')
             ->setEntityClass(User::class)
             ->setEntityId((int) $user->getId());
         $em->persist($audit);
@@ -151,7 +170,7 @@ final class UserController extends AbstractController
 
             $audit = (new \App\Entity\Audit())
                 ->setUser($this->getUser())
-                ->setAction('password_change')
+                ->setAction('Mot de passe actualisé')
                 ->setEntityClass(User::class)
                 ->setEntityId((int) $user->getId());
             $em->persist($audit);

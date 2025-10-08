@@ -14,7 +14,7 @@
     <div class="d-flex align-items-center justify-content-between mb-3">
         <h1 class="h3 m-0">Matériels</h1>
         {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('app_equipment_new') }}" class="btn btn-primary"><i class="fa-solid fa-plus me-1"></i>Nouveau matériel</a>
+            <a href="{{ path('app_equipment_new') }}" class="btn btn-outilne-primary"><i class="fa-solid fa-plus me-1"></i>Nouveau matériel</a>
         {% endif %}
     </div>
 
@@ -32,26 +32,27 @@
             <label class="form-label">Recherche</label>
             <input type="text" name="q" value="{{ q|default('') }}" class="form-control" placeholder="Nom ou référence">
         </div>
-        <div class="col-sm-3">
-            <label class="form-label">Archivés</label>
-            <div class="form-check form-switch">
-                <input class="form-check-input form-switch bg-primary" type="checkbox" id="toggleArchivedEq" name="archived" value="1" {% if archived|default(false) %}checked{% endif %}>
-                <label class="form-check-label" for="toggleArchivedEq">Inclure les archivés</label>
-            </div>
-        </div>
-        <div class="col-sm-3 align-self-end d-flex gap-2">
+
+        <div class="col-sm-6 align-self-end d-flex gap-2">
             <input type="hidden" name="limit" value="{{ limit }}">
-            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-filter me-1"></i>Filtrer</button>
-            <a class="btn btn-primary" href="?"><i class="fa-solid fa-rotate-right me-1"></i>Réinitialiser</a>
+                <div class="btn-group" role="group" aria-label="Basic example">
+            <button class="btn btn-outilne-primary" type="submit"><i class="fa-solid fa-filter me-1"></i>Filtrer</button>
+            <a class="btn btn-outilne-primary text-nowrap" href="{{ path('app_equipment_index') }}"><i class="fa-solid fa-rotate-right me-1"></i>Réinitialiser</a>
+            <button class="btn btn-outilne-info" type="submit" name="low_stock" value="1"><i class="fa-solid fa-filter me-1"></i>Stock faible</button>
+            <button class="btn btn-outilne-info" type="submit" name="out_of_stock" value="1"><i class="fa-solid fa-filter me-1"></i>Rupture de stock</button>
+            </div>
         </div>
     </form>
 
     <div class="card">
-    <table class="table table-hover mb-0">
+    <table class="table table-hover mb-0 table-striped">
         <thead>
             <tr>
                 <th>#</th>
                 <th>Nom</th>
+                <th>Statut</th>
+                <th>Disponibilité</th>
+                <th>Affectations</th>
                 <th>Référence</th>
                 <th>Catégorie</th>
                 <th>État</th>
@@ -63,13 +64,15 @@
         {% for equipment in equipment %}
             <tr>
                 <td>{{ equipment.id }}</td>
+                <td>{{ equipment.name }}</td>
                 <td>
-                    {{ equipment.name }}
                     {% if equipment.deletedAt %}
-                        <span class="badge bg-danger ms-2">Mat. archivé</span>
-                        {% else %}
-                        <span class="badge bg-info ms-2">Mat. actif</span>
+                        <span class="badge bg-danger">Mat. archivé</span>
+                    {% else %}
+                        <span class="badge bg-info">Mat. actif</span>
                     {% endif %}
+                </td>
+                <td>
                     {# Disponibilité: En stock si stockQuantity > 0, sinon Assigné si affectations actives #}
                     {% set activeAssigned = 0 %}
                     {% for a in equipment.assignments %}
@@ -81,27 +84,35 @@
                         {% endif %}
                     {% endfor %}
                     {% if equipment.stockQuantity > 0 %}
-                        <span class="badge bg-primary ms-2">En stock</span>
+                        <span class="badge bg-primary">En stock</span>
                     {% elseif activeAssigned > 0 %}
-                        <span class="badge bg-primary ms-2">Assigné</span>
+                        <span class="badge bg-primary">Assigné</span>
                     {% else %}
-                        <span class="badge bg-danger ms-2">Indisponible</span>
+                        <span class="badge bg-danger">Indisponible</span>
                     {% endif %}
-                    <span class="badge bg-primary ms-2">Affectations: {{ equipment.assignments|length }}</span>
+                </td>
+                <td>
+                    <span class="badge bg-primary">Affectations: {{ equipment.assignments|length }}</span>
                 </td>
                 <td>{{ equipment.reference }}</td>
                 <td>{{ equipment.category.name }}</td>
                 <td>
-                    {% set s = equipment.state %}
-                    {% set badge = s == 'neuf' ? 'primary' : (s == 'utilisé' ? 'info' : 'danger') %}
-                    <span class="badge bg-{{ badge }} text-uppercase">{{ s }}</span>
+                    {% set badge, state_text = 'secondary', 'N/A' %}
+                    {% if equipment.state == 'neuf' %}
+                        {% set badge, state_text = 'primary', 'Neuf' %}
+                    {% elseif equipment.state == 'utilisé' %}
+                        {% set badge, state_text = 'info', 'Utilisé' %}
+                    {% elseif equipment.state == 'endommagé' %}
+                        {% set badge, state_text = 'danger', 'Endommagé' %}
+                    {% endif %}
+                    <span class="badge bg-{{ badge }}">{{ state_text }}</span>
                 </td>
                 <td>{{ equipment.stockQuantity }}</td>
                 <td>
                     <div class="d-flex gap-2 justify-content-end">
-                        <a href="{{ path('app_equipment_show', {'id': equipment.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-eye me-1"></i>Voir</a>
+                        <a href="{{ path('app_equipment_show', {'id': equipment.id}) }}" class="btn btn-sm btn-outilne-primary"><i class="fa-solid fa-eye me-1"></i>Voir</a>
                         {% if not equipment.deletedAt %}
-                            <a href="{{ path('app_equipment_edit', {'id': equipment.id}) }}" class="btn btn-sm btn-warning"><i class="fa-solid fa-pen me-1"></i>Éditer</a>
+                            <a href="{{ path('app_equipment_edit', {'id': equipment.id}) }}" class="btn btn-sm btn-outilne-info"><i class="fa-solid fa-pen me-1"></i>Éditer</a>
                         {% endif %}
                         {% if is_granted('ROLE_ADMIN') %}
                             {% if not equipment.deletedAt %}
@@ -125,11 +136,11 @@
     <nav class="mt-3" aria-label="Pagination">
         <ul class="pagination justify-content-end">
             <li class="page-item {% if page <= 1 %}disabled{% endif %}">
-                <a class="page-link" href="?page={{ page - 1 }}&limit={{ limit }}{% if categoryId is defined and categoryId %}&category={{ categoryId }}{% endif %}{% if q is defined and q %}&q={{ q }}{% endif %}{% if archived|default(false) %}&archived=1{% endif %}">Précédent</a>
+                <a class="page-link" href="?page={{ page - 1 }}&limit={{ limit }}{% if categoryId is defined and categoryId %}&category={{ categoryId }}{% endif %}{% if q is defined and q %}&q={{ q }}{% endif %}{% if archived|default(false) %}&archived=1{% endif %}{% if low_stock|default(false) %}&low_stock=1{% endif %}{% if out_of_stock|default(false) %}&out_of_stock=1{% endif %}">Précédent</a>
             </li>
             <li class="page-item disabled"><span class="page-link">Page {{ page }} / {{ pages }}</span></li>
             <li class="page-item {% if page >= pages %}disabled{% endif %}">
-                <a class="page-link" href="?page={{ page + 1 }}&limit={{ limit }}{% if categoryId is defined and categoryId %}&category={{ categoryId }}{% endif %}{% if q is defined and q %}&q={{ q }}{% endif %}{% if archived|default(false) %}&archived=1{% endif %}">Suivant</a>
+                <a class="page-link" href="?page={{ page + 1 }}&limit={{ limit }}{% if categoryId is defined and categoryId %}&category={{ categoryId }}{% endif %}{% if q is defined and q %}&q={{ q }}{% endif %}{% if archived|default(false) %}&archived=1{% endif %}{% if low_stock|default(false) %}&low_stock=1{% endif %}{% if out_of_stock|default(false) %}&out_of_stock=1{% endif %}">Suivant</a>
             </li>
         </ul>
     </nav>

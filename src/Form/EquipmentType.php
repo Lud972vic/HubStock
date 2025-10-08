@@ -23,6 +23,7 @@ class EquipmentType extends AbstractType
                 'placeholder' => 'Choisir une catégorie',
                 'label' => 'Catégorie',
             ])
+            ->add('stockQuantity')
             ->add('state', ChoiceType::class, [
                 'label' => 'État',
                 'choices' => [
@@ -31,8 +32,10 @@ class EquipmentType extends AbstractType
                     'Endommagé' => 'endommagé',
                 ],
                 'placeholder' => 'Choisir un état',
+                'choice_attr' => function ($choice, $key, $value) {
+                    return ['data-state' => $value];
+                },
             ])
-            ->add('stockQuantity')
         ;
     }
 

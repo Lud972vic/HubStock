@@ -34,11 +34,20 @@ final class EquipmentController extends AbstractController
         $categoryId = (int) $request->query->get('category', 0);
         $q = trim((string) $request->query->get('q', ''));
         $includeArchived = ($request->query->get('archived') === '1');
+        $lowStock = ($request->query->get('low_stock') === '1');
+        $outOfStock = ($request->query->get('out_of_stock') === '1');
+
         $qb = $equipmentRepository->createQueryBuilder('e')
             ->leftJoin('e.category', 'c')
             ;
         if (!$includeArchived) {
             $qb->andWhere('e.deletedAt IS NULL');
+        }
+        if ($lowStock) {
+            $qb->andWhere('e.stockQuantity <= 5');
+        }
+        if ($outOfStock) {
+            $qb->andWhere('e.stockQuantity = 0');
         }
         if ($categoryId > 0) {
             $qb->andWhere('c.id = :categoryId')
@@ -72,6 +81,8 @@ final class EquipmentController extends AbstractController
             'categories' => $categories,
             'q' => $q,
             'archived' => $includeArchived,
+            'low_stock' => $lowStock,
+            'out_of_stock' => $outOfStock,
         ]);
     }
 
@@ -91,7 +102,7 @@ final class EquipmentController extends AbstractController
             // Audit: création matériel
             $audit = (new \App\Entity\Audit())
                 ->setUser($this->getUser())
-                ->setAction('create')
+                ->setAction('Création')
                 ->setEntityClass(\App\Entity\Equipment::class)
                 ->setEntityId((int) $equipment->getId());
             $entityManager->persist($audit);
@@ -174,12 +185,12 @@ final class EquipmentController extends AbstractController
         $equipment->setStockQuantity($equipment->getStockQuantity() + $delta);
         $entityManager->persist($equipment);
 
-        // Enregistrer un mouvement d'ajustement (sans affectation)
+        // Enregistrer un mouvement (sans affectation) avec type explicite
         $movement = new \App\Entity\Movement();
         $movement->setEquipment($equipment);
         $movement->setStore(null);
         $movement->setAssignment(null);
-        $movement->setType('ajustement');
+        $movement->setType($direction === 'decrease' ? 'diminuer' : 'augmenter');
         $movement->setQuantity($qty);
         $movement->setOccurredAt(new \DateTimeImmutable());
         if ($this->getUser()) {
@@ -208,7 +219,7 @@ final class EquipmentController extends AbstractController
             // Audit: modification matériel
             $audit = (new \App\Entity\Audit())
                 ->setUser($this->getUser())
-                ->setAction('update')
+                ->setAction('Actualisation')
                 ->setEntityClass(\App\Entity\Equipment::class)
                 ->setEntityId((int) $equipment->getId());
             $entityManager->persist($audit);
@@ -240,7 +251,7 @@ final class EquipmentController extends AbstractController
             // Audit: soft delete
             $audit = (new \App\Entity\Audit())
                 ->setUser($this->getUser())
-                ->setAction('soft_delete')
+                ->setAction('Suppression')
                 ->setEntityClass(\App\Entity\Equipment::class)
                 ->setEntityId((int) $equipment->getId());
             $entityManager->persist($audit);
@@ -269,7 +280,7 @@ final class EquipmentController extends AbstractController
             // Audit: restore
             $audit = (new \App\Entity\Audit())
                 ->setUser($this->getUser())
-                ->setAction('restore')
+                ->setAction('Restauration')
                 ->setEntityClass(\App\Entity\Equipment::class)
                 ->setEntityId((int) $equipment->getId());
             $entityManager->persist($audit);

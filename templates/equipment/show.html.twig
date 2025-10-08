@@ -22,9 +22,9 @@
             {% endif %}
         </h1>
         <div class="d-flex gap-2">
-            <a href="{{ path('app_equipment_index') }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-arrow-left me-1"></i>Retour</a>
+            <a href="{{ path('app_equipment_index') }}" class="btn btn-sm btn-outilne-primary"><i class="fa-solid fa-arrow-left me-1"></i>Retour</a>
             {% if not equipment.deletedAt %}
-                <a href="{{ path('app_equipment_edit', {'id': equipment.id}) }}" class="btn btn-danger"><i class="fa-solid fa-pen me-1"></i>Modifier</a>
+                <a href="{{ path('app_equipment_edit', {'id': equipment.id}) }}" class="btn btn-outilne-primary"><i class="fa-solid fa-pen me-1"></i>Modifier</a>
             {% endif %}
             {% if is_granted('ROLE_ADMIN') and equipment.deletedAt %}
                 {{ include('equipment/_restore_form.html.twig') }}
@@ -133,11 +133,11 @@
                     <label class="form-label">Direction</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="direction" id="dirInc" value="increase" checked>
+                            <input class="form-check-input bg-danger" type="radio" name="direction" id="dirInc" value="increase" checked>
                             <label class="form-check-label" for="dirInc">Augmenter</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="direction" id="dirDec" value="decrease">
+                            <input class="form-check-input bg-danger" type="radio" name="direction" id="dirDec" value="decrease">
                             <label class="form-check-label" for="dirDec">Diminuer</label>
                         </div>
                     </div>
@@ -149,7 +149,7 @@
                 </div>
 
                 <div class="col-6 col-md-2">
-                    <button type="submit" class="btn btn-danger w-100">Valider</button>
+                    <button type="submit" class="btn btn-outilne-danger w-100">Valider</button>
                 </div>
             </form>
         </div>
@@ -183,8 +183,10 @@
                                             <span class="badge bg-primary">Ajout</span>
                                         {% elseif mov.type == 'retour' %}
                                             <span class="badge bg-warning text-dark">Retour</span>
-                                        {% elseif mov.type == 'ajustement' %}
-                                            <span class="badge bg-secondary">ajustement</span>
+                                        {% elseif mov.type == 'augmenter' %}
+                                            <span class="badge bg-success">Augmenter</span>
+                                        {% elseif mov.type == 'diminuer' %}
+                                            <span class="badge bg-danger">Diminuer</span>
                                         {% else %}
                                             <span class="badge bg-secondary">{{ mov.type }}</span>
                                         {% endif %}

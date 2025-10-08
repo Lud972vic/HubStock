@@ -1,5 +1,5 @@
 {% set isArchived = assignment.deletedAt is not null %}
 <form method="post" action="{{ path('app_assignment_delete', {'id': assignment.id}) }}" {% if not isArchived %}data-confirm="Archiver l’affectation #{{ assignment.id }} ({{ assignment.equipment.reference }}{% if assignment.equipment.name %} — {{ assignment.equipment.name }}{% endif %} → {{ assignment.store.name }}) ?" data-confirm-type="assignment"{% endif %}>
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ assignment.id) }}">
-    <button class="btn btn-sm btn-danger" {% if isArchived %}disabled title="Déjà archivée."{% endif %}><i class="fa-solid fa-box-archive me-1"></i>Archiver</button>
+    <button class="btn btn-sm btn-outilne-danger" {% if isArchived %}disabled title="Déjà archivée."{% endif %}><i class="fa-solid fa-box-archive me-1"></i>Archiver</button>
 </form>

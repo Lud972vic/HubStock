@@ -20,7 +20,7 @@ class Movement
     /** Identifiant du mouvement */
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Assignment::class)]
+    #[ORM\ManyToOne(targetEntity: Assignment::class, inversedBy: 'movements')]
     #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
     /** Affectation liée (peut être null si mouvement global) */
     private ?Assignment $assignment = null;

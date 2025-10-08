@@ -14,7 +14,7 @@
     <div class="d-flex align-items-center justify-content-between mb-3">
         <h1 class="h3 m-0">Affectations</h1>
         {% if is_granted('ROLE_USER') %}
-            <a href="{{ path('app_assignment_new') }}" class="btn btn-primary"><i class="fa-solid fa-plus me-1"></i>Nouvelle affectation</a>
+            <a href="{{ path('app_assignment_new') }}" class="btn btn-outilne-primary"><i class="fa-solid fa-plus me-1"></i>Nouvelle affectation</a>
         {% endif %}
     </div>
 
@@ -39,25 +39,29 @@
         <div class="col-sm-2">
             <label class="form-label">Archivés</label>
             <div class="form-check form-switch">
-                <input class="form-check-input form-switch bg-primary" type="checkbox" id="toggleArchivedAssign" name="archived" value="1" {% if archived|default(false) %}checked{% endif %}>
+                <input class="form-check-input form-switch bg-danger" type="checkbox" id="toggleArchivedAssign" name="archived" value="1" {% if archived|default(false) %}checked{% endif %} style="background-color: red !important; border-color: red !important;">
                 <label class="form-check-label" for="toggleArchivedAssign">Inclure les archivés</label>
             </div>
         </div>
-        <div class="col-sm-2 align-self-end d-flex gap-2">
+
+        <div class="col-sm-4 align-self-end d-flex gap-2">
             <input type="hidden" name="limit" value="{{ limit }}">
-            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-filter me-1"></i>Filtrer</button>
-            <a class="btn btn-primary" href="?"><i class="fa-solid fa-rotate-right me-1"></i>Réinitialiser</a>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                <button class="btn btn-outilne-primary" type="submit"><i class="fa-solid fa-filter me-1"></i>Filtrer</button>
+                <a class="btn btn-outilne-primary" href="?"><i class="fa-solid fa-rotate-right me-1"></i>Réinitialiser</a>
+            </div>
         </div>
     </form>
 
     <div class="card">
-    <table class="table table-hover mb-0">
+    <table class="table table-hover mb-0 table-striped">
         <thead>
             <tr>
                 <th>#</th>
                 <th>Affecté le</th>
                 <th>Magasin</th>
                 <th>Matériel</th>
+                <th>Statut</th>
                 <th>Quantité</th>
                 <th>Retournée</th>
                 <th>Retourné le</th>
@@ -67,30 +71,30 @@
         <tbody>
         {% for assignment in assignments %}
             <tr>
+                <td>{{ assignment.id }}</td>
+                <td>{{ assignment.assignedAt ? assignment.assignedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td><a href="{{ path('app_assignment_index', {'store_q': assignment.store.name}) }}" class="text-primary text-decoration-none">{{ assignment.store.name }} <i class="fas fa-filter fa-xs"></i></a></td>
+                <td><a href="{{ path('app_equipment_index', {'q': assignment.equipment.reference}) }}" class="text-primary text-decoration-none">{{ assignment.equipment.reference }}{% if assignment.equipment.name %} — {{ assignment.equipment.name }}{% endif %} <i class="fas fa-filter fa-xs"></i></a></td>
                 <td>
-                    {{ assignment.id }}
                     {% set remaining = assignment.quantity - (assignment.returnedQuantity ?: 0) %}
                     {% if assignment.deletedAt %}
-                        <span class="badge bg-danger ms-2">Archivé</span>
+                        <span class="badge bg-danger">Archivé</span>
                     {% elseif remaining <= 0 %}
-                        <span class="badge bg-info text-dark ms-2">Retourné</span>
+                        <span class="badge bg-info">Retourné</span>
                     {% elseif assignment.returnedQuantity > 0 %}
-                        <span class="badge bg-warning text-dark ms-2">Partiel</span>
+                        <span class="badge bg-warning">Partiel</span>
                     {% else %}
-                        <span class="badge bg-success ms-2">Affecté</span>
+                        <span class="badge bg-success">Affecté</span>
                     {% endif %}
                 </td>
-                <td>{{ assignment.assignedAt ? assignment.assignedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ assignment.store.name }}</td>
-                <td>{{ assignment.equipment.reference }}{% if assignment.equipment.name %} — {{ assignment.equipment.name }}{% endif %}</td>
                 <td>{{ assignment.quantity }}</td>
                 <td>{{ assignment.returnedQuantity }}</td>
                 <td>{{ assignment.returnedAt ? assignment.returnedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td class="text-end">
                     <div class="d-flex gap-2 justify-content-end">
-                        <a href="{{ path('app_assignment_show', {'id': assignment.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-eye me-1"></i>Voir</a>
+                        <a href="{{ path('app_assignment_show', {'id': assignment.id}) }}" class="btn btn-sm btn-outilne-primary"><i class="fa-solid fa-eye me-1"></i>Voir</a>
                         {% if not assignment.deletedAt %}
-                            <a href="{{ path('app_assignment_edit', {'id': assignment.id}) }}" class="btn btn-sm btn-warning"><i class="fa-solid fa-pen me-1"></i>Éditer</a>
+                            <a href="{{ path('app_assignment_edit', {'id': assignment.id}) }}" class="btn btn-sm btn-outilne-info"><i class="fa-solid fa-pen me-1"></i>Éditer</a>
                         {% endif %}
                         {% if is_granted('ROLE_ADMIN') %}
                             {% if not assignment.deletedAt %}

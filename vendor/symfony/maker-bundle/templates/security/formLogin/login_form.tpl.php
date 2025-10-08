@@ -33,7 +33,7 @@
             </div>
         #}
 
-        <button class="btn btn-lg btn-primary" type="submit">
+        <button class="btn btn-lg btn-outilne-primary" type="submit">
             Sign in
         </button>
     </form>

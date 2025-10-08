@@ -23,10 +23,10 @@
             {% endif %}
         </h1>
         <div class="d-flex gap-2">
-            <a href="{{ path('app_store_index') }}" class="btn btn-sm  btn-primary"><i class="fa-solid fa-arrow-left me-1"></i>Retour</a>
+            <a href="{{ path('app_store_index') }}" class="btn btn-sm  btn-outilne-primary"><i class="fa-solid fa-arrow-left me-1"></i>Retour</a>
             {% if not store.deletedAt %}
-                <a href="{{ path('app_store_edit', {'id': store.id}) }}" class="btn btn-primary"><i class="fa-solid fa-pen me-1"></i>Éditer</a>
-                <a href="{{ path('app_store_assigned_pdf', {'id': store.id}) }}" target="_blank" class="btn btn-primary"><i class="fa-regular fa-file-pdf me-1"></i>Exporter PDF</a>
+                <a href="{{ path('app_store_edit', {'id': store.id}) }}" class="btn btn-outilne-primary"><i class="fa-solid fa-pen me-1"></i>Éditer</a>
+                <a href="{{ path('app_store_assigned_pdf', {'id': store.id}) }}" target="_blank" class="btn btn-outilne-primary"><i class="fa-regular fa-file-pdf me-1"></i>Exporter PDF</a>
             {% endif %}
             {% if is_granted('ROLE_ADMIN') and store.deletedAt %}
                 {{ include('store/_restore_form.html.twig') }}
@@ -49,8 +49,8 @@
                 <td>{{ store.address }}</td>
             </tr>
             <tr>
-                <th>Responsable</th>
-                <td>{{ store.manager }}</td>
+                <th>SR</th>
+                <td>{{ store.sr }}</td>
             </tr>
         </tbody>
     </table>
@@ -71,33 +71,73 @@
                 </ul>
             </div>
         </div>
-        <div class="col-12 col-md-6">
-            <div class="border rounded p-3 h-100">
-                <h2 class="h6 mb-2">Historique des actions</h2>
-                {% if audits is empty %}
-                    <p class="text-muted m-0">Aucun audit pour ce magasin.</p>
+        <div class="card mb-4">
+            <div class="card-header">Historique des mouvements</div>
+            <div class="card-body">
+                {% if assignments is empty %}
+                    <p>Aucun matériel affecté à ce magasin.</p>
                 {% else %}
-                    <div class="table-responsive">
-                        <table class="table table-sm align-middle mb-0">
-                            <thead>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Matériel</th>
+                                <th>Utilisateur</th>
+                                <th>Date d'affectation</th>
+                                <th>Quantité</th>
+                                <th>Quantité retournée</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for assignment in assignments %}
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Action</th>
-                                    <th>Utilisateur</th>
+                                    <td>{{ assignment.equipment.name }}</td>
+                                    <td>{{ assignment.createdBy ? assignment.createdBy.fullName : 'N/A' }}</td>
+                                    <td>{{ assignment.assignedAt ? assignment.assignedAt|date('Y-m-d H:i:s') : '' }}</td>
+                                    <td>{{ assignment.quantity }}</td>
+                                    <td>{{ assignment.returnedQuantity ?? 0 }}</td>
+                                    <td>
+                                        {% if assignment.returnedQuantity == assignment.quantity %}
+                                            <span class="badge bg-success">Terminé</span>
+                                        {% elseif assignment.returnedQuantity > 0 and assignment.returnedQuantity < assignment.quantity %}
+                                            <span class="badge bg-warning">Partiellement retourné</span>
+                                        {% else %}
+                                            <span class="badge bg-info">En cours</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('app_assignment_show', {id: assignment.id}) }}" class="btn btn-sm btn-outilne-primary">Voir</a>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {% for a in audits %}
-                                    <tr>
-                                        <td>{{ a.occurredAt|date('Y-m-d H:i') }}</td>
-                                        <td>{{ a.action }}</td>
-                                        <td>{{ a.user ? a.user.fullName : '—' }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 {% endif %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">Historique des audits</div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Utilisateur</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for audit in audits %}
+                            <tr>
+                                <td>{{ audit.occurredAt ? audit.occurredAt|date('Y-m-d H:i:s') : '' }}</td>
+                                <td>{{ audit.user ? audit.user.fullName : 'N/A' }}</td>
+                                <td>{{ audit.action }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -112,47 +152,4 @@
         {% endif %}
     </div>
 
-    <div class="card mt-4">
-        <div class="card-body">
-            <h2 class="h5 mb-3">Historique des mouvements du magasin</h2>
-            {% if movements is empty %}
-                <p class="text-muted m-0">Aucun mouvement enregistré pour ce magasin.</p>
-            {% else %}
-                <div class="table-responsive">
-                    <table class="table table-sm align-middle">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Type</th>
-                                <th>Quantité</th>
-                                <th>Matériel</th>
-                                <th>Utilisateur</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for mov in movements %}
-                                <tr>
-                                    <td>{{ mov.occurredAt|date('Y-m-d H:i') }}</td>
-                                    <td>
-                                        {% if mov.type == 'ajout' %}
-                                            <span class="badge bg-primary">Ajout</span>
-                                        {% elseif mov.type == 'retour' %}
-                                            <span class="badge bg-warning text-dark">Retour</span>
-                                        {% elseif mov.type == 'ajustement' %}
-                                            <span class="badge bg-secondary">Ajustement</span>
-                                        {% else %}
-                                            <span class="badge bg-secondary">{{ mov.type }}</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ mov.quantity }}</td>
-                                    <td>{{ mov.equipment.reference }}{% if mov.equipment.name %} — {{ mov.equipment.name }}{% endif %}</td>
-                                    <td>{{ mov.performedBy ? mov.performedBy.fullName : '—' }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% endif %}
-        </div>
-    </div>
 {% endblock %}

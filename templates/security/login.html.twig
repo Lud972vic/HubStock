@@ -10,6 +10,8 @@
 #}
 {% extends 'base.html.twig' %}
 
+{% block body_class %}login-bg{% endblock %}
+
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
@@ -31,7 +33,7 @@
             <input type="password" id="inputPassword" name="_password" class="form-control" required>
           </div>
           <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-          <button class="btn btn-primary w-100" type="submit"><i class="fa-solid fa-right-to-bracket me-1"></i>Se connecter</button>
+          <button class="btn btn-outilne-primary w-100" type="submit"><i class="fa-solid fa-right-to-bracket me-1"></i>Se connecter</button>
         </form>
         <p class="text-muted small mt-3 text-center">
           HubStock est un outil de gestion des matériels et des affectations entre magasins.

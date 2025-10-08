@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => '__root__',
-        'pretty_version' => 'dev-master',
-        'version' => 'dev-master',
-        'reference' => '73ed8d5ec6032906d005a53cfcbc0c272e0db087',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '008669b1ee09d7be6c006bb9fdf7c34a43145fc6',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         '__root__' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => '73ed8d5ec6032906d005a53cfcbc0c272e0db087',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '008669b1ee09d7be6c006bb9fdf7c34a43145fc6',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -199,6 +199,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'fakerphp/faker' => array(
+            'pretty_version' => 'v1.24.1',
+            'version' => '1.24.1.0',
+            'reference' => 'e0ee18eb1e6dc3cda3ce9fd97e5a0689a88a64b5',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../fakerphp/faker',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'masterminds/html5' => array(
             'pretty_version' => '2.10.0',
             'version' => '2.10.0.0',
@@ -347,9 +356,9 @@
             'dev_requirement' => true,
         ),
         'phpunit/phpunit' => array(
-            'pretty_version' => '12.3.15',
-            'version' => '12.3.15.0',
-            'reference' => 'b035ee2cd8ecad4091885b61017ebb1d80eb0e57',
+            'pretty_version' => '12.4.0',
+            'version' => '12.4.0.0',
+            'reference' => 'f62aab5794e36ccd26860db2d1bbf89ac19028d9',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpunit/phpunit',
             'aliases' => array(),

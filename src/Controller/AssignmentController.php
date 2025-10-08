@@ -50,6 +50,7 @@ final class AssignmentController extends AbstractController
         }
         if ($storeQ !== '') {
             $qb->andWhere('LOWER(s.name) LIKE :store_q')
+               //->setParameter('store_q', ''.mb_strtolower($storeQ).'');
                ->setParameter('store_q', '%'.mb_strtolower($storeQ).'%');
         }
         if ($equipmentQ !== '') {
@@ -93,7 +94,9 @@ final class AssignmentController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $assignment = new Assignment();
-        $form = $this->createForm(AssignmentType::class, $assignment);
+        $form = $this->createForm(AssignmentType::class, $assignment, [
+            'entity_manager' => $entityManager,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -131,7 +134,7 @@ final class AssignmentController extends AbstractController
                     // Audit: création affectation
                     $audit = (new \App\Entity\Audit())
                         ->setUser($this->getUser())
-                        ->setAction('create')
+                        ->setAction('Création')
                         ->setEntityClass(\App\Entity\Assignment::class)
                         ->setEntityId((int) $assignment->getId());
                     $entityManager->persist($audit);
@@ -163,7 +166,9 @@ final class AssignmentController extends AbstractController
     public function edit(Request $request, Assignment $assignment, EntityManagerInterface $entityManager): Response
     {
         $originalQty = $assignment->getQuantity();
-        $form = $this->createForm(AssignmentType::class, $assignment);
+        $form = $this->createForm(AssignmentType::class, $assignment, [
+            'entity_manager' => $entityManager,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -191,7 +196,7 @@ final class AssignmentController extends AbstractController
             // Audit: modification affectation
             $audit = (new \App\Entity\Audit())
                 ->setUser($this->getUser())
-                ->setAction('update')
+                ->setAction('Actualisation')
                 ->setEntityClass(\App\Entity\Assignment::class)
                 ->setEntityId((int) $assignment->getId());
             $entityManager->persist($audit);
@@ -223,7 +228,7 @@ final class AssignmentController extends AbstractController
             // Audit: soft delete
             $audit = (new \App\Entity\Audit())
                 ->setUser($this->getUser())
-                ->setAction('soft_delete')
+                ->setAction('Suppression')
                 ->setEntityClass(\App\Entity\Assignment::class)
                 ->setEntityId((int) $assignment->getId());
             $entityManager->persist($audit);
@@ -250,7 +255,7 @@ final class AssignmentController extends AbstractController
 
             $audit = (new \App\Entity\Audit())
                 ->setUser($this->getUser())
-                ->setAction('restore')
+                ->setAction('Restauration')
                 ->setEntityClass(\App\Entity\Assignment::class)
                 ->setEntityId((int) $assignment->getId());
             $entityManager->persist($audit);
@@ -298,7 +303,7 @@ final class AssignmentController extends AbstractController
         // Audit: retour affectation
         $audit = (new \App\Entity\Audit())
             ->setUser($this->getUser())
-            ->setAction('return')
+            ->setAction('Restauration')
             ->setEntityClass(\App\Entity\Assignment::class)
             ->setEntityId((int) $assignment->getId());
         $entityManager->persist($audit);

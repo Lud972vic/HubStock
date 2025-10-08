@@ -19,26 +19,43 @@ class AppFixtures extends Fixture
     {
         // Admin user
         $user = new User();
-        $user->setEmail('admin@example.com');
+        $user->setEmail('admin@local.fr');
         $user->setFullName('Administrateur');
         $user->setRoles(['ROLE_ADMIN']);
-        $user->setPassword($this->passwordHasher->hashPassword($user, 'admin'));
+        $user->setPassword($this->passwordHasher->hashPassword($user, 'admin@local.fr'));
         $manager->persist($user);
 
+        // Les user
+        for ($i = 0; $i < 2; $i++) {
+            $user = new User();
+            $faker = \Faker\Factory::create('fr_FR');
+            $user->setEmail($faker->email);
+            $user->setFullName($faker->name);
+            $user->setRoles(['ROLE_USER']);
+            $user->setPassword($this->passwordHasher->hashPassword($user, $faker->email));
+            $manager->persist($user);
+        }
+
         // Stores
-        $storeNames = ['Magasin Centre', 'Magasin Nord', 'Magasin Sud', 'Magasin Est', 'Magasin Ouest'];
-        $stores = [];
-        foreach ($storeNames as $i => $name) {
+        $srValues = ['LYO', 'ABL', 'HON', 'TOU', 'CES'];
+        $statutValues = ['fermé', 'en activité'];
+        $typeDeProjetValues = ['Création', 'Modernisation', 'Transfert', 'Rénovation'];
+        for ($i = 0; $i < 15; $i++) {
             $store = new Store();
-            $store->setName($name);
-            $store->setAddress('Adresse ' . ($i + 1) . ', Ville');
-            $store->setManager('Responsable ' . chr(65 + $i));
+            $faker = \Faker\Factory::create('fr_FR');
+            $store->setName($faker->unique()->company);
+            $store->setAddress($faker->streetAddress . ', ' . $faker->countryCode() . ', ' . $faker->region());
+            $store->setSr($srValues[array_rand($srValues)]);
+            $store->setCodeFR('FR' . str_pad(random_int(1, 999999), 6, '0', STR_PAD_LEFT));
+            $store->setStatut($statutValues[array_rand($statutValues)]);
+            $store->setTypeDeProjet($typeDeProjetValues[array_rand($typeDeProjetValues)]);
+            $store->setDateOuverture($faker->dateTimeThisCentury);
             $manager->persist($store);
             $stores[] = $store;
         }
 
         // Categories
-        $categoryNames = ['Informatique', 'Électrique', 'Outillage', 'Sécurité'];
+        $categoryNames = ['Meuble', 'Caisse', 'Informatique', 'Entretien'];
         $categories = [];
         foreach ($categoryNames as $name) {
             $cat = new Category();
@@ -48,12 +65,13 @@ class AppFixtures extends Fixture
         }
 
         // Equipment
-        $states = ['neuf', 'utilisé', 'endommagé'];
+        $states = ['Neuf', 'Utilisé', 'Endommagé'];
         $equipments = [];
-        for ($i = 1; $i <= 20; $i++) {
+        for ($i = 1; $i <= 25; $i++) {
             $eq = new Equipment();
-            $eq->setName('Équipement ' . $i);
-            $eq->setReference(sprintf('EQ-%04d', $i));
+            $faker = \Faker\Factory::create('fr_FR');
+            $eq->setName(ucfirst($faker->words(2, true)));
+            $eq->setReference("Réf ." . $faker->siren());
             $eq->setCategory($categories[array_rand($categories)]);
             $eq->setState($states[array_rand($states)]);
             $eq->setStockQuantity(random_int(10, 50));
@@ -62,7 +80,7 @@ class AppFixtures extends Fixture
         }
 
         // Assignments
-        for ($i = 0; $i < 15; $i++) {
+        for ($i = 0; $i < 25; $i++) {
             $equipment = $equipments[array_rand($equipments)];
             // Only assign if stock available
             if ($equipment->getStockQuantity() <= 0) {

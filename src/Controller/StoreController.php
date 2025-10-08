@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Repository\AssignmentRepository;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -80,7 +81,7 @@ final class StoreController extends AbstractController
             // Audit: création magasin (qui, quoi, sur quel id)
             $audit = (new \App\Entity\Audit())
                 ->setUser($this->getUser())
-                ->setAction('create')
+                ->setAction('Création')
                 ->setEntityClass(\App\Entity\Store::class)
                 ->setEntityId((int) $store->getId());
             $entityManager->persist($audit);
@@ -97,7 +98,7 @@ final class StoreController extends AbstractController
 
     /** Affiche le détail et l’historique d’audit d’un magasin */
     #[Route('/{id}', name: 'app_store_show', methods: ['GET'])]
-    public function show(Store $store, EntityManagerInterface $entityManager): Response
+    public function show(Store $store, EntityManagerInterface $entityManager, AssignmentRepository $assignmentRepository): Response
     {
         // Mouvements associés à ce magasin
         $movements = $entityManager->getRepository(\App\Entity\Movement::class)
@@ -112,13 +113,15 @@ final class StoreController extends AbstractController
         $created = $repo->findOneBy([
             'entityClass' => \App\Entity\Store::class,
             'entityId' => (int) $store->getId(),
-            'action' => 'create',
+            'action' => 'Création',
         ], ['occurredAt' => 'ASC', 'id' => 'ASC']);
         $lastUpdate = $repo->findOneBy([
             'entityClass' => \App\Entity\Store::class,
             'entityId' => (int) $store->getId(),
-            'action' => 'update',
+            'action' => 'Actualisation',
         ], ['occurredAt' => 'DESC', 'id' => 'DESC']);
+
+        $assignments = $assignmentRepository->findBy(['store' => $store], ['assignedAt' => 'DESC']);
 
         return $this->render('store/show.html.twig', [
             'store' => $store,
@@ -128,6 +131,7 @@ final class StoreController extends AbstractController
             'createdAt' => $created ? $created->getOccurredAt() : null,
             'updatedBy' => $lastUpdate ? $lastUpdate->getUser() : null,
             'updatedAt' => $lastUpdate ? $lastUpdate->getOccurredAt() : null,
+            'assignments' => $assignments,
         ]);
     }
 
@@ -144,7 +148,7 @@ final class StoreController extends AbstractController
             // Audit: modification magasin
             $audit = (new \App\Entity\Audit())
                 ->setUser($this->getUser())
-                ->setAction('update')
+                ->setAction('Actualisation')
                 ->setEntityClass(\App\Entity\Store::class)
                 ->setEntityId((int) $store->getId());
             $entityManager->persist($audit);
@@ -176,7 +180,7 @@ final class StoreController extends AbstractController
             // Audit: soft delete
             $audit = (new \App\Entity\Audit())
                 ->setUser($this->getUser())
-                ->setAction('soft_delete')
+                ->setAction('Suppression')
                 ->setEntityClass(\App\Entity\Store::class)
                 ->setEntityId((int) $store->getId());
             $entityManager->persist($audit);
@@ -203,7 +207,7 @@ final class StoreController extends AbstractController
 
             $audit = (new \App\Entity\Audit())
                 ->setUser($this->getUser())
-                ->setAction('restore')
+                ->setAction('Restauration')
                 ->setEntityClass(\App\Entity\Store::class)
                 ->setEntityId((int) $store->getId());
             $entityManager->persist($audit);

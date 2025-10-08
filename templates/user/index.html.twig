@@ -3,7 +3,7 @@
 {% block body %}
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h1 class="h3">Utilisateurs</h1>
-  <a class="btn btn-primary" href="{{ path('app_user_new') }}"><i class="fa-solid fa-plus me-1"></i>Nouveau</a>
+  <a class="btn btn-outilne-primary" href="{{ path('app_user_new') }}"><i class="fa-solid fa-plus me-1"></i>Nouveau</a>
 </div>
 
 <div class="table-responsive">
@@ -31,12 +31,12 @@
             {% endif %}
           </td>
           <td class="text-end">
-            <a class="btn btn-sm btn-primary" href="{{ path('app_user_show', {id: user.id}) }}"><i class="fa-solid fa-eye me-1"></i>Voir</a>
-            <a class="btn btn-sm btn-warning" href="{{ path('app_user_edit', {id: user.id}) }}"><i class="fa-solid fa-pen me-1"></i>Modifier</a>
-            <a class="btn btn-sm btn-danger" href="{{ path('app_user_change_password', {id: user.id}) }}"><i class="fa-solid fa-key me-1"></i>Mot de passe</a>
+            <a class="btn btn-sm btn-outilne-primary" href="{{ path('app_user_show', {id: user.id}) }}"><i class="fa-solid fa-eye me-1"></i>Voir</a>
+            <a class="btn btn-sm btn-outilne-info" href="{{ path('app_user_edit', {id: user.id}) }}"><i class="fa-solid fa-pen me-1"></i>Modifier</a>
+            <a class="btn btn-sm btn-outilne-danger" href="{{ path('app_user_change_password', {id: user.id}) }}"><i class="fa-solid fa-key me-1"></i>Mot de passe</a>
             {% if user.isActive %}
               <form method="post" action="{{ path('app_user_deactivate', {id: user.id}) }}" class="d-inline" data-confirm="Désactiver cet utilisateur ?" data-confirm-type="delete">
-                <button class="btn btn-sm btn-danger"><i class="fa-solid fa-user-slash me-1"></i>Désactiver</button>
+                <button class="btn btn-sm btn-outilne-danger"><i class="fa-solid fa-user-slash me-1"></i>Désactiver</button>
               </form>
             {% else %}
               <form method="post" action="{{ path('app_user_activate', {id: user.id}) }}" class="d-inline" data-confirm="Activer cet utilisateur ?">
@@ -51,4 +51,18 @@
     </tbody>
   </table>
   </div>
+
+  {% if pages > 1 %}
+    <nav class="mt-3">
+      <ul class="pagination justify-content-end">
+        <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+          <a class="page-link" href="{{ path('app_user_index', {page: page - 1, limit: limit}) }}">Précédent</a>
+        </li>
+        <li class="page-item disabled"><span class="page-link">Page {{ page }} / {{ pages }}</span></li>
+        <li class="page-item {% if page >= pages %}disabled{% endif %}">
+          <a class="page-link" href="{{ path('app_user_index', {page: page + 1, limit: limit}) }}">Suivant</a>
+        </li>
+      </ul>
+    </nav>
+  {% endif %}
 {% endblock %}

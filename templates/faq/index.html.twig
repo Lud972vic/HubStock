@@ -3,8 +3,8 @@
 {% block title %}FAQ{% endblock %}
 
 {% block body %}
-<div class="container py-4" id="faq-top">
-    <div class="d-flex align-items-center mb-3">
+<div class="container py-4 faq-theme" id="faq-top">
+    <div class="d-flex align-items-center mb-3 faq-header">
         <i class="fa-solid fa-circle-question fa-lg me-2"></i>
         <h1 class="h3 m-0">FAQ</h1>
     </div>
@@ -17,19 +17,19 @@
                 <i class="fa-solid fa-list me-2"></i>
                 <strong>Sommaire</strong>
             </div>
-            <ul class="list-inline mb-0 small">
+            <ul class="list-inline mb-0 small faq-summary">
                 <li class="list-inline-item me-3">
-                    <a href="#section-prise-en-main" class="link-secondary">
+                    <a href="#section-prise-en-main">
                         <i class="fa-solid fa-book-open me-1"></i> Prise en main
                     </a>
                 </li>
                 <li class="list-inline-item me-3">
-                    <a href="#section-stock" class="link-secondary">
+                    <a href="#section-stock">
                         <i class="fa-solid fa-boxes-stacked me-1"></i> Stock
                     </a>
                 </li>
                 <li class="list-inline-item">
-                    <a href="#section-administration" class="link-secondary">
+                    <a href="#section-administration">
                         <i class="fa-solid fa-user-gear me-1"></i> Administration
                     </a>
                 </li>
@@ -135,7 +135,7 @@
             </div>
         </div>
         <div class="text-end mt-2">
-            <a href="#faq-top" class="small link-secondary"><i class="fa-solid fa-arrow-up me-1"></i> Haut de page</a>
+            <a href="#faq-top" class="small link-top"><i class="fa-solid fa-arrow-up me-1"></i> Haut de page</a>
         </div>
 
         <div id="section-stock" class="mt-3 mb-2 d-flex align-items-center text-uppercase text-muted small">
@@ -185,7 +185,7 @@
             </div>
         </div>
         <div class="text-end mt-2">
-            <a href="#faq-top" class="small link-secondary"><i class="fa-solid fa-arrow-up me-1"></i> Haut de page</a>
+            <a href="#faq-top" class="small link-top"><i class="fa-solid fa-arrow-up me-1"></i> Haut de page</a>
         </div>
 
         <div id="section-administration" class="mt-3 mb-2 d-flex align-items-center text-uppercase text-muted small">
@@ -248,7 +248,7 @@
             </div>
         </div>
         <div class="text-end mt-2">
-            <a href="#faq-top" class="small link-secondary"><i class="fa-solid fa-arrow-up me-1"></i> Haut de page</a>
+            <a href="#faq-top" class="small link-top"><i class="fa-solid fa-arrow-up me-1"></i> Haut de page</a>
         </div>
     </div>
 
@@ -260,8 +260,13 @@
 
     <div class="mt-3 text-muted small">
         <i class="fa-solid fa-life-ring me-1"></i>
-        Besoin d’aide ? Contactez le support :
-        <a href="mailto:support@hubstock.local" class="link-secondary">support@hubstock.local</a>
+        Besoin d’aide ? 
+        <br>
+        Contactez le support :
+        <br>
+        <a href="mailto:support@lud972vic.fr" class="link-danger no-underline">support@lud972vic.fr</a>
+        <br>
+        <a href="https://github.com/Lud972vic" class="link-danger no-underline">GitHub Lud972vic</a>
     </div>
 </div>
 {% endblock %}
