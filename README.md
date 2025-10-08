@@ -4,29 +4,43 @@ Une application web simple pour gérer des magasins, des matériels, et leurs af
 
 <table>
   <tr>
-    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.37.06.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.06.png"></td>
-    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.37.15.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.15.png"></td>
+    <td><img src="public/readme/capture-2025-10-08-11-28-13.png" width="1920" alt="capture-2025-10-08-11-28-13.png"></td>
+    <td><img src="public/readme/capture-2025-10-08-11-28-44.png" width="1920" alt="capture-2025-10-08-11-28-44.png"></td>
   </tr>
   <tr>
-    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.37.24.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.24.png"></td>
-    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.37.49.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.37.49.png"></td>
+    <td><img src="public/readme/capture-2025-10-08-11-28-59.png" width="1920" alt="capture-2025-10-08-11-28-59.png"></td>
+    <td><img src="public/readme/capture-2025-10-08-11-29-40.png" width="1920" alt="capture-2025-10-08-11-29-40.png"></td>
   </tr>
   <tr>
-    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.38.08.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.08.png"></td>
-    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.38.18.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.18.png"></td>
+    <td><img src="public/readme/capture-2025-10-08-11-29-47.png" width="1920" alt="capture-2025-10-08-11-29-47.png"></td>
+    <td><img src="public/readme/capture-2025-10-08-11-30-00.png" width="1920" alt="capture-2025-10-08-11-30-00.png"></td>
   </tr>
   <tr>
-    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.38.26.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.26.png"></td>
-    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.38.41.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.41.png"></td>
+    <td><img src="public/readme/capture-2025-10-08-11-30-50.png" width="1920" alt="capture-2025-10-08-11-30-50.png"></td>
+    <td><img src="public/readme/capture-2025-10-08-11-30-59.png" width="1920" alt="capture-2025-10-08-11-30-59.png"></td>
   </tr>
   <tr>
-    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.38.54.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.54.png"></td>
-    <td><img src="public/readme/Capture d’écran 2025-10-03 à 15.38.59.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.38.59.png"></td>
+    <td><img src="public/readme/capture-2025-10-08-11-31-16.png" width="1920" alt="capture-2025-10-08-11-31-16.png"></td>
+    <td><img src="public/readme/capture-2025-10-08-11-32-12.png" width="1920" alt="capture-2025-10-08-11-32-12.png"></td>
   </tr>
   <tr>
-    <td colspan="2"><img src="public/readme/Capture d’écran 2025-10-03 à 15.39.09.png" width="1920" alt="Capture d’écran 2025-10-03 à 15.39.09.png"></td>
+    <td><img src="public/readme/capture-2025-10-08-11-32-20.png" width="1920" alt="capture-2025-10-08-11-32-20.png"></td>
+    <td><img src="public/readme/capture-2025-10-08-11-32-25.png" width="1920" alt="capture-2025-10-08-11-32-25.png"></td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="public/readme/capture-2025-10-08-11-32-33.png" width="1920" alt="capture-2025-10-08-11-32-33.png"></td>
   </tr>
 </table>
+
+<!-- Astuce: générer automatiquement ce tableau -->
+
+Pour régénérer automatiquement le tableau ci‑dessus à partir des images présentes dans `public/readme/` (espaces et accents gérés), exécute:
+
+```
+php bin/generate-readme-gallery.php
+```
+
+Copie/colle ensuite la sortie dans ce README à l’emplacement voulu.
 
 ## Fonctionnalités
 
